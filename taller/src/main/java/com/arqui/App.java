@@ -18,7 +18,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class App {
-    private static final Path ORIGEN = Paths.get("C:\\Users\\Bastian\\Documents\\Universidad\\ARQUITECTURA DE SOFTWARE\\Arquitectura-de-Software\\ServidorFTP\\ftp-data");
+    private static final Path ORIGEN = Paths.get(
+            "C:\\Users\\Bastian\\Documents\\Universidad\\ARQUITECTURA DE SOFTWARE\\Arquitectura-de-Software\\ServidorFTP\\ftp-data");
     private static final Path DESTINO = Paths.get("C:\\Users\\Bastian\\Desktop\\hola2");
     private static final long ESPERA_MS = 750;
 
