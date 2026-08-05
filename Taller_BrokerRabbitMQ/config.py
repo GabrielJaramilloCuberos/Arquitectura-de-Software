@@ -10,13 +10,13 @@ import pika
 # PASSWORD = "tNhqawuyTs3W0-pOrL6WpxU1SBCNZ1hb"
 # VHOST = "etpyjjad"
 
-RABBITMQ_HOST = "gerbil-01.rmq.cloudamqp.com"
+RABBITMQ_HOST = "gull-01.rmq.cloudamqp.com"
 RABBITMQ_PORT = 5672
-USERNAME = "vwvppvmc"
-PASSWORD = "WhlRmWYYWeScxi71jSNHqEJK5H8PsB1m"
-VHOST = "vwvppvmc"
+USERNAME = "woqbgkcj"
+PASSWORD = "472d6iqSz8VakpE3uME8Lywt2wquVZMa"
+VHOST = "woqbgkcj"
 
-EXCHANGE = "taller_exchange"
+EXCHANGE = "taller_2"
 
 def get_connection():
     
