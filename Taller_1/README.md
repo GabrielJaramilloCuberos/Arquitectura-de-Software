@@ -3,6 +3,10 @@ El taller consiste en monitorear un servidor FTP y descargar automáticamente al
 - **Parte A**: monitoreo por *polling* implementado a mano con Apache Commons Net (`FTPClient`).
 - **Parte B**: misma funcionalidad implementada como una ruta de integración con **Apache Camel** (`camel-ftp` + `camel-file`).
 
+Para mayor detalle, ingresar:
+
+[Informe](taller/INFORME.md)
+
 ## Estructura del proyecto
 
 ```
