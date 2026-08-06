@@ -5,7 +5,7 @@ El taller consiste en monitorear un servidor FTP y descargar automáticamente al
 
 Para mayor detalle, ingresar:
 
-[Informe](/INFORME.md)
+[Informe](INFORME.md)
 
 ## Estructura del proyecto
 
