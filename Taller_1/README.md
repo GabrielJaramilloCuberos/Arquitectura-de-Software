@@ -38,16 +38,41 @@ cd ServidorFTP
 docker compose up -d
 ```
 
-Esto levanta un contenedor `pure-ftpd` con:
+Esto levanta un contenedor pure-ftpd con los siguientes datos de conexión:
 
-- Host/puerto: `localhost:21` (modo pasivo en el rango `30000-30009`)
-- Usuario: `admin`
-- Contraseña: `admin123`
-- Home del usuario: `/home/admin`, mapeado al volumen local `ServidorFTP/ftp-data`
+Parámetro -	Valor
+Host	localhost (o 127.0.0.1)
+Puerto	21
+Usuario	admin
+Contraseña	admin123
+Modo	Pasivo (rango de puertos 30000-30009)
 
-Para probar la Parte A o la Parte B, copia o descarga archivos dentro de `ServidorFTP/ftp-data` (por ejemplo el archivo `Canales.mp4` ya incluido, o cualquier archivo/carpeta nuevo) y estos aparecerán en el servidor FTP.
+El home del usuario (/home/admin) está mapeado al volumen local ServidorFTP/ftp-data, así que cualquier archivo que pongas en esa carpeta aparece automáticamente en el servidor FTP, y viceversa.
 
-Para detener el servidor cuando termines:
+Cómo conectarte para verificar que funciona
+
+Puedes usar cualquier cliente FTP. Recomendamos FileZilla (gratis, con interfaz gráfica tipo explorador de archivos):
+
+Descarga e instala FileZilla Client.
+Ábrelo y ve a Archivo → Administrador de sitios (o usa la barra rápida de conexión en la parte superior).
+Completa los datos de conexión:
+Servidor/Host: localhost
+Puerto: 21
+Usuario: admin
+Contraseña: admin123
+Tipo de acceso: Normal (usuario y contraseña)
+Haz clic en Conectar rápido.
+Deberías ver la carpeta remota /home/admin con el contenido de ServidorFTP/ftp-data (por ejemplo, Canales.mp4, ya incluido de ejemplo).
+
+Desde ahí puedes arrastrar archivos nuevos a la carpeta remota, o simplemente copiarlos directamente en ServidorFTP/ftp-data desde el explorador de archivos de tu sistema — ambas formas son equivalentes, ya que esa carpeta está sincronizada en tiempo real con el servidor FTP.
+
+Probar la Parte A o la Parte B
+
+Con el servidor FTP corriendo y con al menos un archivo en ServidorFTP/ftp-data, ejecuta la aplicación monitor (Parte A o Parte B) — debería detectar los archivos existentes y cualquier archivo nuevo que agregues después, copiándolos automáticamente a la carpeta de destino local configurada.
+
+Detener el servidor
+
+Cuando termines de probar:
 
 ```bash
 docker compose down
