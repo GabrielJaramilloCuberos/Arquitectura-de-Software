@@ -4,8 +4,10 @@ El taller consiste en monitorear un servidor FTP y descargar automáticamente al
 - **Parte B**: misma funcionalidad implementada como una ruta de integración con **Apache Camel** (`camel-ftp` + `camel-file`).
 
 Para mayor detalle, ingresar:
-
 [Informe](INFORME.md)
+
+Para reporte en PDF:
+[Reporte](Jaramillo_Mendez_Olaya_Salazar_Silva_Galindo_Informe_Taller_1.pdf)
 
 ## Estructura del proyecto
 
