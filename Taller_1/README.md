@@ -1,3 +1,6 @@
+# Autores
+- [Gabriel Jaramillo Cuberos](@GabrielJaramilloCuberos)
+
 El taller consiste en monitorear un servidor FTP y descargar automáticamente al equipo local los archivos que se vayan agregando, implementado de dos formas distintas:
 
 - **Parte A**: monitoreo por *polling* implementado a mano con Apache Commons Net (`FTPClient`).
