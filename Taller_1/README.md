@@ -1,5 +1,4 @@
-# Autores
-- [Gabriel Jaramillo Cuberos](@GabrielJaramilloCuberos)
+# Resumen
 
 El taller consiste en monitorear un servidor FTP y descargar automáticamente al equipo local los archivos que se vayan agregando, implementado de dos formas distintas:
 
