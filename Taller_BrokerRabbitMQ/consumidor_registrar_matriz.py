@@ -4,29 +4,50 @@ Autores: Gabriel Jaramillo, Guden Silva, Roberth Méndez, Luz Adriana Salazar, J
 Fecha: Agosto 2026
 Materia: Arquitectura de Software
 Tema: RabbitMQ
-Fichero: registrar_matriz.py
-Descripción: Registro de los alimentos procesados en la matriz de participación.
+Fichero: consumidor_registrar_matriz.py
+Descripción: Consumidor final que registra en SQLite los elementos clasificados.
 """
 
-# Importamos json para convertir el mensaje recibido
-# desde formato JSON a un diccionario de Python.
+# Importamos json para convertir los mensajes
+# recibidos en formato JSON a diccionarios Python.
 import json
+
+
+# Importamos sqlite3 para crear y usar la base de datos
+# local donde se almacenan los registros procesados.
 import sqlite3
+
+
+# Importamos Path para construir la ruta del archivo
+# SQLite de manera segura y relativa al script.
 from pathlib import Path
 
 
-
-# Importamos la función encargada de crear la conexión
-# y el nombre del exchange.
+# Importamos la configuración del exchange y la función
+# encargada de crear la conexión con RabbitMQ.
 from config import EXCHANGE, get_connection
 
+
+# Ruta del archivo SQLite donde se guardarán los registros.
 DB_PATH = Path(__file__).with_name("registros_procesados.db")
+
+
+# Nombre exacto de la cola final del flujo.
 QUEUE_NAME = "cola-matriz"
 
 
 def inicializar_base_datos():
+    """
+    Crea la base de datos SQLite y la tabla de registros.
+
+    Si la base de datos no existe, SQLite la genera automáticamente.
+    """
+
     with sqlite3.connect(DB_PATH) as conexion:
         cursor = conexion.cursor()
+
+
+        # La tabla almacena el elemento y su clasificación final.
         cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS registros_procesados (
@@ -36,21 +57,41 @@ def inicializar_base_datos():
             )
             """
         )
+
+
+        # Si la base fue creada antes de incluir la columna
+        # contador_final, la agregamos sin perder los datos previos.
         columnas = {
             fila[1] for fila in cursor.execute("PRAGMA table_info(registros_procesados)")
         }
-        # Mantiene los registros previos si la base fue creada antes de esta columna.
         if "contador_final" not in columnas:
             cursor.execute(
                 "ALTER TABLE registros_procesados ADD COLUMN contador_final INTEGER"
             )
+
         conexion.commit()
 
 
 def obtener_datos_mensaje(body):
+    """
+    Extrae el elemento, el tipo y el contador desde el mensaje recibido.
+
+    El consumidor acepta tanto las claves del taller original como una
+    versión normalizada para mantener compatibilidad con el flujo.
+    """
+
     data = json.loads(body.decode("utf-8"))
+
+
+    # En el flujo del taller el elemento puede llegar como 'alimento'.
     elemento = data.get("elemento", data.get("alimento"))
+
+
+    # La clasificación puede llegar como 'tipo' o como 'tipo_elemento'.
     tipo_elemento = data.get("tipo_elemento", data.get("tipo"))
+
+
+    # El contador representa el avance del flujo y se incrementa al final.
     contador = data.get("contador", 0)
 
     if not elemento or not tipo_elemento:
@@ -63,8 +104,18 @@ def obtener_datos_mensaje(body):
 
 
 def guardar_registro(elemento, tipo_elemento, contador_final):
+    """
+    Inserta un registro procesado dentro de SQLite.
+
+    La escritura se hace en una transacción pequeña y directa para
+    mantener simple la persistencia del consumidor final.
+    """
+
     with sqlite3.connect(DB_PATH) as conexion:
         cursor = conexion.cursor()
+
+
+        # Guardamos el elemento, su clasificación y el contador final.
         cursor.execute(
             """
             INSERT INTO registros_procesados (elemento, tipo_elemento, contador_final)
@@ -72,11 +123,17 @@ def guardar_registro(elemento, tipo_elemento, contador_final):
             """,
             (elemento, tipo_elemento, contador_final),
         )
+
         conexion.commit()
 
 
-
 def callback(ch, method, properties, body):
+    """
+    Procesa cada mensaje que llega a cola-matriz.
+
+    Solo se envía ACK después de que el registro queda guardado en SQLite.
+    """
+
     try:
         elemento, tipo_elemento, contador = obtener_datos_mensaje(body)
         guardar_registro(elemento, tipo_elemento, contador)
@@ -97,16 +154,26 @@ def callback(ch, method, properties, body):
 
 
 def main():
+    """
+    Inicia el consumidor y deja el proceso en escucha permanente.
+    """
+
     inicializar_base_datos()
 
     try:
+        # Creamos la conexión y el canal contra CloudAMQP.
         connection = get_connection()
         channel = connection.channel()
 
+
+        # Declaramos el exchange tipo topic y la cola final del flujo.
         channel.exchange_declare(exchange=EXCHANGE, exchange_type="topic", durable=True)
         channel.queue_declare(queue=QUEUE_NAME, durable=True)
         channel.queue_bind(exchange=EXCHANGE, queue=QUEUE_NAME, routing_key="Matriz")
 
+
+        # Procesamos un mensaje a la vez para confirmar solo
+        # cuando la persistencia en SQLite haya sido exitosa.
         channel.basic_qos(prefetch_count=1)
         channel.basic_consume(
             queue=QUEUE_NAME,
