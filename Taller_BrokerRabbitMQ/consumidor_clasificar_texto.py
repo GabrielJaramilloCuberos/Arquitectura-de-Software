@@ -1,5 +1,12 @@
 import json
 from config import get_connection, EXCHANGE
+from alimentos import alimentos
+
+def clasificar_alimento(data):
+    alimento = data["alimento"]
+    tipo = alimentos.get(alimento, "Desconocido")
+    data["tipo"] = tipo
+    return data
 
 def callback(ch, method, properties, body):
     data = json.loads(body)
@@ -7,6 +14,11 @@ def callback(ch, method, properties, body):
     data["origen"] = "Clasificar_Texto"
 
     print(f"📥 Clasificar_Texto | Contador: {data['contador']}")
+
+    # Clasificar el alimento
+    data = clasificar_alimento(data)
+    print(f"📥 Alimento recibido: {data['alimento']}")
+    print(f"🏷️ Tipo: {data['tipo']}")
 
     ch.basic_publish(
         exchange=EXCHANGE,
