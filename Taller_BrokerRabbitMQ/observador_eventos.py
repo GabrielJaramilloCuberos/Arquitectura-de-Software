@@ -8,9 +8,9 @@ def callback(ch, method, properties, body):
     print("🔎 EVENTO OBSERVADO")
     print(f"   🕒 Hora     : {datetime.now()}")
     print(f"   🧭 Tópico   : {method.routing_key}")
-    print(f"   🏷️ Origen   : {data.get('origen')}")
+    print(f"   🏷️  Origen   : {data.get('origen')}")
     print(f"   🔢 Contador : {data.get('contador')}")
-    print("-" * 60)
+    print("=" * 45)
 
 connection = get_connection()
 channel = connection.channel()
@@ -32,5 +32,13 @@ channel.basic_consume(
     auto_ack=True
 )
 
-print("👁️ Observador de eventos escuchando TODO...")
-channel.start_consuming()
+print("👁️  Observador de eventos escuchando TODO...\n")
+
+try:
+    channel.start_consuming()
+except KeyboardInterrupt:
+    print("\n" + "=" * 38)
+    print("👋 Cerrando observador de eventos...")
+    print("=" * 38)
+finally:
+    connection.close()

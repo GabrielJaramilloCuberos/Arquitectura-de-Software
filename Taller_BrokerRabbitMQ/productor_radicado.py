@@ -10,17 +10,39 @@ channel.exchange_declare(
     durable=True
 )
 
-mensaje = {
-    "origen": "Notificacion_Radicado",
-    "mensaje": "Se ha radicado una nueva solicitud",
-    "contador": 0
-}
+print("📤 Productor Radicado - Escriba sus alimentos")
 
-channel.basic_publish(
-    exchange=EXCHANGE,
-    routing_key="Extraer",
-    body=json.dumps(mensaje)
-)
+try:
+    while True:
+        print("\n" + "=" * 45)
+        alimento = input("🍎 Alimento: ").strip()
 
-print("📤 Productor Radicado → Extraer")
-connection.close()
+        if alimento.lower() == "salir":
+            raise KeyboardInterrupt
+
+        if not alimento:
+            print("⚠️  Debe ingresar un alimento.\n")
+            print("=" * 45)
+            continue
+
+        mensaje = {
+            "origen": "Notificacion_Radicado",
+            "alimento": alimento,
+            "contador": 0
+        }
+
+        channel.basic_publish(
+            exchange=EXCHANGE,
+            routing_key="Extraer",
+            body=json.dumps(mensaje)
+        )
+
+        print(f"✅ Enviado a cola_extraer: {alimento}")
+        print("=" * 45)
+        
+except KeyboardInterrupt:
+    print("\n" + "=" * 35)
+    print("👋 Cerrando productor...")
+    print("=" * 35)
+finally:
+    connection.close()

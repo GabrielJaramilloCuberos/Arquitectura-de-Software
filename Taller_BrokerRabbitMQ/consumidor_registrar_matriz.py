@@ -22,4 +22,12 @@ channel.basic_consume(
 )
 
 print("👂 Consumidor Registrar_Matriz escuchando...")
-channel.start_consuming()
+
+try:
+    channel.start_consuming()
+except KeyboardInterrupt:
+    print("\n" + "=" * 35)
+    print("👋 Cerrando consumidor Registrar_Matriz...")
+    print("=" * 35)
+finally:
+    connection.close()

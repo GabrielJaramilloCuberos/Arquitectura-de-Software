@@ -13,18 +13,21 @@ def callback(ch, method, properties, body):
     data["contador"] += 1
     data["origen"] = "Clasificar_Texto"
 
+    print("\n" + "=" * 45)
     print(f"📥 Clasificar_Texto | Contador: {data['contador']}")
 
     # Clasificar el alimento
     data = clasificar_alimento(data)
     print(f"📥 Alimento recibido: {data['alimento']}")
-    print(f"🏷️ Tipo: {data['tipo']}")
-
+    print(f"🏷️  Tipo: {data['tipo']}")
+    
     ch.basic_publish(
         exchange=EXCHANGE,
         routing_key="Matriz",
         body=json.dumps(data)
     )
+    print(f"✅ Enviado a cola_matriz: {data['alimento']} ({data['tipo']})")
+    print("=" * 45)
 
 connection = get_connection()
 channel = connection.channel()
@@ -40,4 +43,12 @@ channel.basic_consume(
 )
 
 print("👂 Consumidor Clasificar_Texto escuchando...")
-channel.start_consuming()
+
+try:
+    channel.start_consuming()
+except KeyboardInterrupt:
+    print("\n" + "=" * 45)
+    print("👋 Cerrando consumidor Clasificar_Texto...")
+    print("=" * 45)
+finally:
+    connection.close()
