@@ -1,7 +1,23 @@
+"""
+Pontificia Universidad Javeriana
+Autores: Gabriel Jaramillo, Guden Silva, Roberth Méndez, Luz Adriana Salazar, Jorge Olaya, Santiago Galindo
+Fecha: Agosto 2026
+Materia: Arquitectura de Software
+Tema: RabbitMQ
+Fichero: registrar_matriz.py
+Descripción: Registro de los alimentos procesados en la matriz de participación.
+"""
+
+# Importamos json para convertir el mensaje recibido
+# desde formato JSON a un diccionario de Python.
 import json
 import sqlite3
 from pathlib import Path
 
+
+
+# Importamos la función encargada de crear la conexión
+# y el nombre del exchange.
 from config import EXCHANGE, get_connection
 
 DB_PATH = Path(__file__).with_name("registros_procesados.db")
@@ -57,6 +73,7 @@ def guardar_registro(elemento, tipo_elemento, contador_final):
             (elemento, tipo_elemento, contador_final),
         )
         conexion.commit()
+
 
 
 def callback(ch, method, properties, body):
