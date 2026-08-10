@@ -1,3 +1,13 @@
+"""
+Pontificia Universidad Javeriana
+Autores: Gabriel Jaramillo, Guden Silva, Roberth Méndez, Luz Adriana Salazar, Jorge Olaya, Santiago Galindo
+Fecha: Agosto 2026
+Materia: Arquitectura de Software
+Tema: RabbitMQ
+Fichero: alimentos.py
+Descripción: Clasificación de diferentes alimentos a procesar
+"""
+
 alimentos = {
     # =========================
     # PROTEÍNAS
