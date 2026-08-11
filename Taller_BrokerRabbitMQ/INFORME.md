@@ -13,6 +13,7 @@
 9. [Dificultades y soluciones](#9-dificultades-y-soluciones)
 10. [Conclusiones](#10-conclusiones)
 
+LINK DE REPOSITORIO: https://github.com/GabrielJaramilloCuberos/Arquitectura-de-Software.git
 ---
 
 ## 1. Análisis del problema
