@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: productos
+  template:
+    metadata:
+      labels:
+        app: productos
+    spec:
+      containers:
+        - name: productos
+          image: micro-productos:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: productos
+spec:
+  selector:
+    app: productos
+  ports:
+    - port: 8000
+      targetPort: 8000
