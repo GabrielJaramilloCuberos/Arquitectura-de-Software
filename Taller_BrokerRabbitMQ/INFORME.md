@@ -13,6 +13,7 @@
 9. [Dificultades y soluciones](#9-dificultades-y-soluciones)
 10. [Conclusiones](#10-conclusiones)
 
+LINK DE REPOSITORIO: https://github.com/GabrielJaramilloCuberos/Arquitectura-de-Software.git
 ---
 
 ## 1. Análisis del problema
@@ -136,16 +137,31 @@ En lugar de suscribirse a una cola de procesamiento, este componente declara una
 > Esta sección debe completarse con capturas reales de la ejecución. A continuación se listan los puntos donde deben insertarse, siguiendo el flujo descrito en el [README](README.md).
 
 1. `[Captura 1: instalación de dependencias con pip install -r requirements.txt]`
+<img width="783" height="193" alt="image" src="https://github.com/user-attachments/assets/7d9e9095-5cd9-4a82-ab02-3ce2a9f009f9" />
+
 2. `[Captura 2: consola de observador_eventos.py mostrando "👁️ Observador de eventos escuchando TODO..."]`
+<img width="381" height="121" alt="image" src="https://github.com/user-attachments/assets/aa351f23-1ec3-498a-bf6d-eec805b2adf3" />
+
 3. `[Captura 3: las tres terminales de consumidor_extraer_texto.py, consumidor_clasificar_texto.py y consumidor_registrar_matriz.py en estado "escuchando..."]`
+<img width="1010" height="146" alt="image" src="https://github.com/user-attachments/assets/0738b7ac-8a89-4184-b9d6-286467fc3a1a" />
+
 4. `[Captura 4: productor_radicado.py enviando un alimento, ej. "manzana", y el mensaje "✅ Enviado a cola_extraer: manzana"]`
+<img width="539" height="208" alt="image" src="https://github.com/user-attachments/assets/7d41f974-4a55-47d8-bc14-372569d9cf64" />
+
 5. `[Captura 5: consola de consumidor_extraer_texto.py mostrando la normalización del texto y el reenvío a cola_clasificar]`
+<img width="394" height="204" alt="image" src="https://github.com/user-attachments/assets/7fcc7185-c350-45a3-9424-dcf757d3f4c1" />
+
 6. `[Captura 6: consola de consumidor_clasificar_texto.py mostrando el tipo detectado (ej. "🏷️ Tipo: Fruta") y el reenvío a cola-matriz]`
+<img width="391" height="246" alt="image" src="https://github.com/user-attachments/assets/cc7f5f3a-a226-49e0-b35d-5d6a0af100c7" />
+
 7. `[Captura 7: consola de consumidor_registrar_matriz.py mostrando "✅ Registro insertado en la Matriz de Participación"]`
+<img width="444" height="138" alt="image" src="https://github.com/user-attachments/assets/be4e093f-d411-42d5-a32d-ca4cb60d7c49" />
+
 8. `[Captura 8: consola de observador_eventos.py mostrando los mismos eventos capturados por routing_key="#" en tiempo real]`
+<img width="386" height="404" alt="image" src="https://github.com/user-attachments/assets/e8420b43-9ed4-41d9-938d-b05c09817f72" />
+
 9. `[Captura 9: contenido de registros_procesados.db (ej. con "sqlite3 registros_procesados.db 'SELECT * FROM registros_procesados;'") evidenciando el registro persistido]`
-10. `[Captura 10 (opcional): ejecución de productor_formulario.py y su llegada directa a cola-matriz sin pasar por extracción ni clasificación]`
-11. `[Captura 11 (opcional): envío de un alimento no registrado en alimentos.py para evidenciar la clasificación "Desconocido"]`
+<img width="566" height="69" alt="image" src="https://github.com/user-attachments/assets/40e3f518-21d9-4b62-a0d0-a778cc4fe163" />
 
 ## 9. Dificultades y soluciones
 
