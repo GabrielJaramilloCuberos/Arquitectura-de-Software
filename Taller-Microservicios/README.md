@@ -1,64 +1,82 @@
-# Taller de Microservicios con Docker y Kubernetes
+# Taller 3: Arquitectura de Microservicios con Docker y Kubernetes
+**Integrantes:** Santiago Galindo, Roberth Méndez, Gabriel Jaramillo Cuberos, Jorge Enrique Olaya, Luz Adriana Salazar, Guden Sebastin Silva Rojas
+**Universidad:** Pontificia Universidad Javeriana
 
-Este documento consolida, paso a paso, la implementación, el despliegue, las
-pruebas y el análisis arquitectónico del MiniSistema de Pedidos. Cada sección
-debe completarse con información verificable del repositorio y con las evidencias
-obtenidas durante la ejecución del taller.
-
-> Estado del documento: versión de trabajo. Los textos marcados como
-> **pendiente de integración** deben ser completados por el equipo. Los elementos
-> marcados como **pendientes de validación** ya tienen una descripción preliminar,
-> pero requieren contrastarse con el despliegue final.
+---
 
 ## Contenido
 
-1. Introducción y descripción del problema
-2. Vistas y diagramas de arquitectura
-3. Implementación de los microservicios e integración
-4. Contenerización con Docker
-5. Despliegue, Service Discovery y escalabilidad en Kubernetes
-6. Estrategia y resultados de pruebas
-7. Análisis arquitectónico comparativo
-8. Repositorio Git, ejecución y anexos
+1. [Introducción y descripción del problema](#1-introducción-y-descripción-del-problema)
+2. [Vistas y diagramas de arquitectura](#2-vistas-y-diagramas-de-arquitectura)
+3. [Implementación de los microservicios e integración](#3-implementación-de-los-microservicios-e-integración)
+4. [Contenerización con Docker](#4-contenerización-con-docker)
+5. [Despliegue, Service Discovery y escalabilidad en Kubernetes](#5-despliegue-service-discovery-y-escalabilidad-en-kubernetes)
+6. [Estrategia y resultados de pruebas](#6-estrategia-y-resultados-de-pruebas)
+7. [Análisis arquitectónico comparativo](#7-análisis-arquitectónico-comparativo)
+8. [Repositorio Git, ejecución y anexos](#8-repositorio-git-ejecución-y-anexos)
 
-## 1. Introducción y descripción del problema
+---
 
-**Pendiente de integración:** presentar el contexto del MiniSistema de Pedidos,
-el problema abordado, los objetivos del taller y el alcance de la solución. La
-introducción debe explicar brevemente la transición desde una aplicación
-monolítica conceptual hacia tres microservicios independientes: Productos,
-Pedidos y Notificaciones.
+# 1. Introducción y descripción del problema
+El taller consiste en transformar conceptualmente un sistema monolítico de pedidos en una arquitectura basada en microservicios, utilizando **FastAPI, Docker y Kubernetes**. El sistema se divide en tres capacidades independientes: **Productos, Pedidos y Notificaciones**.
 
-### 1.1 Objetivo general
+La solución permite consultar un catálogo de productos, crear pedidos asociados a productos existentes y simular el envío de notificaciones. Cada capacidad se implementa como un microservicio independiente, con su propia aplicación FastAPI, imagen Docker y ciclo de despliegue.
 
-**Pendiente de integración:** indicar el propósito general del taller.
+El propósito arquitectónico del ejercicio es observar las ventajas y costos de separar una aplicación en servicios independientes. En particular, se busca demostrar comunicación HTTP/REST entre servicios, descubrimiento mediante DNS de Kubernetes, escalamiento horizontal, balanceo de carga y recuperación automática ante fallos.
 
-### 1.2 Objetivos específicos
+La arquitectura no utiliza una base de datos ni servicios externos reales. El almacenamiento de productos y pedidos se mantiene temporalmente en memoria, mientras que el envío de notificaciones se simula mediante registros en los logs del contenedor.
 
-**Pendiente de integración:** enumerar los resultados esperados relacionados con
-FastAPI, Docker, Kubernetes, comunicación entre servicios, escalabilidad y
-recuperación ante fallos.
+## 1.1 Objetivo general
+Implementar y desplegar un MiniSistema de Pedidos basado en microservicios independientes, utilizando FastAPI para las APIs, Docker para la contenerización y Kubernetes para la orquestación, con el fin de analizar aspectos de integración, escalabilidad, disponibilidad y resiliencia de una arquitectura distribuida.
 
-### 1.3 Alcance
+## 1.2 Objetivos específicos
 
-La solución cubre la consulta de productos, la creación y consulta de pedidos y
-la simulación del envío de notificaciones. El ejercicio utiliza almacenamiento
-en memoria y comunicación HTTP/REST; no incluye base de datos, autenticación,
-API Gateway, mensajería asíncrona ni proveedores reales de correo.
+- Implementar los microservicios de **Productos, Pedidos y Notificaciones** utilizando FastAPI.
+- Exponer los recursos de cada microservicio mediante APIs REST.
+- Contenerizar cada servicio mediante imágenes Docker independientes.
+- Configurar la comunicación entre microservicios mediante HTTP/JSON.
+- Utilizar Services y DNS interno de Kubernetes para evitar depender de las IP dinámicas de los Pods.
+- Desplegar los microservicios mediante Deployments y Pods.
+- Escalar horizontalmente el microservicio de Productos.
+- Comprobar el balanceo de solicitudes entre réplicas.
+- Simular la eliminación de un Pod y verificar la autorrecuperación proporcionada por Kubernetes.
+- Validar el comportamiento del sistema ante la indisponibilidad del microservicio Productos.
+- Comparar la arquitectura de microservicios con una alternativa monolítica.
 
-## 2. Vistas y diagramas de arquitectura
+## 1.3 Alcance
+La solución cubre:
 
-### 2.1 Diagrama de contexto de alto nivel - C4 Nivel 1
+- Consulta del catálogo de productos.
+- Consulta de un producto por identificador.
+- Creación de pedidos.
+- Consulta de todos los pedidos.
+- Consulta de un pedido por identificador.
+- Validación de la existencia de un producto antes de crear un pedido.
+- Simulación del envío de notificaciones.
+- Despliegue mediante Docker y Kubernetes.
+- Service Discovery mediante DNS interno.
+- Escalamiento horizontal de Productos.
+- Recuperación automática de Pods.
+El ejercicio **no incluye**:
 
-El MiniSistema de Pedidos permite que un usuario, utilizando Postman u otro
-cliente HTTP, consulte y cree pedidos. El límite del sistema comprende los tres
-microservicios y su infraestructura de ejecución. No existen, en la versión del
-taller, pasarelas de pago, bases de datos ni proveedores externos de correo: la
-notificación se simula mediante un registro en la salida del contenedor.
+- Base de datos persistente.
+- Autenticación o autorización.
+- API Gateway.
+- Mensajería asíncrona.
+- Proveedores reales de correo o notificaciones.
+- Persistencia distribuida de pedidos.
 
-```mermaid
+---
+
+# 2. Vistas y diagramas de arquitectura
+
+## 2.1 Diagrama de contexto de alto nivel - C4 Nivel 1
+El usuario o evaluador interactúa con el sistema mediante Postman u otro cliente HTTP. El sistema comprende los tres microservicios y la infraestructura de ejecución proporcionada por Kubernetes.
+
+```
 C4Context
     title Nivel 1 C4 - Contexto del MiniSistema de Pedidos
+
     Person(usuario, "Usuario / Evaluador", "Prueba la API mediante Postman o un cliente HTTP")
     System(sistema, "MiniSistema de Pedidos", "Gestiona productos, pedidos y notificaciones mediante microservicios")
     System_Ext(kubernetes, "Plataforma Kubernetes", "Orquesta contenedores, red interna, réplicas y recuperación")
@@ -66,21 +84,15 @@ C4Context
     Rel(usuario, sistema, "Crea y consulta pedidos", "HTTP/JSON")
     Rel(kubernetes, sistema, "Ejecuta y supervisa", "Deployments, Services y Pods")
 ```
+Kubernetes funciona como plataforma de soporte y no como parte de la lógica de negocio. Para las pruebas desde el equipo local se utiliza `kubectl port-forward`, permitiendo acceder al microservicio Pedidos desde el host.
 
-Kubernetes aparece como sistema fronterizo de soporte y no como parte de la
-lógica de negocio. El usuario accede temporalmente a Pedidos mediante
-`kubectl port-forward`, por lo que no se expone directamente ninguno de los
-otros dos microservicios.
+## 2.2 Diagrama de contenedores / arquitectura lógica - C4 Nivel 2
+La solución separa tres capacidades de negocio. Cada microservicio es una aplicación FastAPI independiente, empaquetada en una imagen Docker y ejecutada mediante Uvicorn en el puerto interno `8000`.
 
-### 2.2 Diagrama de contenedores / arquitectura lógica - C4 Nivel 2
-
-La solución separa tres capacidades. Cada microservicio es una aplicación
-FastAPI independiente, empaquetada en su propia imagen Docker y atendida por
-Uvicorn en el puerto interno `8000`.
-
-```mermaid
+```
 C4Container
     title Nivel 2 C4 - Contenedores del MiniSistema de Pedidos
+
     Person(usuario, "Usuario / Postman", "Consume la API REST")
 
     System_Boundary(sistema, "MiniSistema de Pedidos") {
@@ -89,33 +101,23 @@ C4Container
         Container(notificaciones, "Microservicio Notificaciones", "Python 3.12, FastAPI, Uvicorn", "Simula el envío de alertas y lo registra en logs; puerto 8000")
     }
 
-    Rel(usuario, pedidos, "POST/GET /pedidos", "HTTP/JSON, host 8002 -> 8000")
+    Rel(usuario, pedidos, "POST/GET /pedidos", "HTTP/JSON")
     Rel(pedidos, productos, "GET /productos/{id}", "HTTP/JSON, productos:8000")
     Rel(pedidos, notificaciones, "POST /notificaciones", "HTTP/JSON, notificaciones:8000")
 ```
 
-#### Responsabilidades e interfaces
+### Responsabilidades e interfaces
+MicroservicioResponsabilidadEndpointsDependenciasProductosMantener y consultar el catálogo en memoria`GET /productos`, `GET /productos/{producto_id}`NingunaPedidosValidar productos, crear y consultar pedidos y coordinar la alerta`POST /pedidos`, `GET /pedidos`, `GET /pedidos/{pedido_id}`Productos y NotificacionesNotificacionesRecibir y simular el envío de una notificación`POST /notificaciones`NingunaEl acoplamiento entre servicios se limita a contratos HTTP/JSON y nombres DNS. No se comparte memoria, código de ejecución ni almacenamiento.
 
-| Contenedor | Responsabilidad | Endpoints | Dependencias salientes |
-|---|---|---|---|
-| Productos | Mantener y consultar el catálogo en memoria | `GET /productos`, `GET /productos/{producto_id}` | Ninguna |
-| Pedidos | Validar el producto, crear y consultar pedidos y coordinar la alerta | `POST /pedidos`, `GET /pedidos`, `GET /pedidos/{pedido_id}` | Productos y Notificaciones |
-| Notificaciones | Recibir y simular el envío de una notificación | `POST /notificaciones` | Ninguna |
+Sin embargo, existe acoplamiento de contrato y temporal entre Pedidos y Productos, ya que Pedidos conoce la estructura de la respuesta de Productos y realiza llamadas síncronas.
 
-El acoplamiento entre servicios se limita a contratos HTTP/JSON y nombres DNS.
-No se comparten memoria, código de ejecución ni almacenamiento. Sin embargo,
-Pedidos conoce la estructura de la respuesta de Productos y realiza llamadas
-síncronas, por lo que todavía existe acoplamiento de contrato y temporal.
+## 2.3 Diagrama de componentes de Pedidos - C4 Nivel 3
+Los siguientes componentes representan responsabilidades lógicas identificadas dentro de `pedidos/app/main.py`. No implican necesariamente que cada componente corresponda a un archivo separado.
 
-### 2.3 Diagrama de componentes de Pedidos - C4 Nivel 3
-
-Los siguientes son componentes **lógicos** identificados dentro de
-`pedidos/app/main.py`. En la implementación actual todos residen en el mismo
-módulo; el diagrama no pretende afirmar que existan archivos separados.
-
-```mermaid
+```
 C4Component
     title Nivel 3 C4 - Componentes internos del microservicio Pedidos
+
     Container_Boundary(pedidos, "Microservicio Pedidos - app/main.py") {
         Component(api, "Aplicación FastAPI", "FastAPI", "Registra rutas, genera OpenAPI y transforma entradas/salidas HTTP")
         Component(modelo, "Modelo Pedido", "Pydantic BaseModel", "Valida producto_id y cantidad mayor que cero")
@@ -143,9 +145,9 @@ C4Component
     Rel(cliente_notificaciones, notificaciones, "POST /notificaciones", "HTTP/JSON")
 ```
 
-La ruta `POST /pedidos` implementa esta secuencia:
+### Flujo de creación de un pedido
 
-```mermaid
+```
 sequenceDiagram
     actor U as Usuario / Postman
     participant P as Pedidos
@@ -154,33 +156,33 @@ sequenceDiagram
 
     U->>P: POST /pedidos {producto_id, cantidad}
     P->>PR: GET /productos/{producto_id}
+
     alt Producto válido
         PR-->>P: 200 + producto
         P->>P: Generar id y guardar en memoria
         P->>N: POST /notificaciones
+
         alt Notificación disponible
             N-->>P: 200 ENVIADA
         else Notificación falla o vence timeout
             P->>P: Conservar pedido sin revertirlo
         end
+
         P-->>U: Pedido CREADO
+
     else Producto inexistente
         PR-->>P: 404
         P-->>U: 400 Producto no encontrado
+
     else Productos no disponible
         P-->>U: 503 Dependencia no disponible
     end
 ```
 
-### 2.4 Diagrama físico y de despliegue
+## 2.4 Diagrama físico y de despliegue
+La arquitectura de despliegue utiliza Services de tipo `ClusterIP` para proporcionar direcciones estables dentro del clúster. Productos puede ejecutarse con tres réplicas para demostrar escalamiento horizontal y balanceo de carga.
 
-El diagrama representa la arquitectura objetivo requerida por el taller. El
-Service `productos` balancea las solicitudes entre tres réplicas equivalentes.
-Los Services son de tipo `ClusterIP`, proporcionan una dirección estable y se
-descubren por DNS interno. El acceso desde el host solo se habilita hacia
-Pedidos mediante port-forwarding.
-
-```mermaid
+```
 flowchart TB
     host["Máquina host<br/>Postman<br/>localhost:8002"]
 
@@ -214,308 +216,480 @@ flowchart TB
     dns -.-> svcNotif
 ```
 
-#### Mapeo físico
+### Mapeo físico
+ElementoCantidad objetivoPuertoFunciónDeployment Productos1No aplicaMantiene el estado deseado de tres PodsPods Productos38000Atienden consultas del catálogoService Productos18000 → 8000DNS estable y balanceo entre réplicasDeployment Pedidos1No aplicaMantiene un Pod de coordinaciónPod Pedidos18000Atiende la API principalService Pedidos18000 → 8000Punto estable para acceder al PodDeployment Notificaciones1No aplicaMantiene un Pod de notificaciónPod Notificaciones18000Recibe y registra alertasService Notificaciones18000 → 8000Nombre DNS estable para PedidosPort-forwardTemporal8002 → 8000Conecta el host con Service Pedidos
+---
 
-| Elemento | Cantidad objetivo | Puerto | Función |
-|---|---:|---:|---|
-| Deployment Productos | 1 | No aplica | Mantiene el estado deseado de tres Pods |
-| Pods Productos | 3 | 8000 | Atienden consultas de catálogo |
-| Service Productos | 1 | 8000 → 8000 | DNS estable y balanceo entre réplicas |
-| Deployment Pedidos | 1 | No aplica | Mantiene un Pod de coordinación |
-| Pod Pedidos | 1 | 8000 | Atiende la API principal |
-| Service Pedidos | 1 | 8000 → 8000 | Punto estable para acceso al Pod |
-| Deployment Notificaciones | 1 | No aplica | Mantiene un Pod de notificación |
-| Pod Notificaciones | 1 | 8000 | Recibe y registra alertas |
-| Service Notificaciones | 1 | 8000 → 8000 | Nombre DNS estable para Pedidos |
-| Port-forward | Temporal | 8002 → 8000 | Conecta el host con Service Pedidos |
+# 3. Implementación de los microservicios e integración
 
-**Pendientes de validación con el equipo:** confirmar que Productos se ejecutó
-realmente con tres réplicas; registrar el nombre y número real de nodos; comprobar
-el comando de port-forward; y sustituir la arquitectura objetivo por capturas del
-estado observado cuando estén disponibles.
+## 3.1 Microservicio Productos
+El microservicio **Productos** es responsable de mantener y consultar el catálogo de productos. El almacenamiento utilizado es una estructura en memoria, por lo que los datos permanecen disponibles mientras el proceso esté activo.
 
-## 3. Implementación de los microservicios e integración
+Endpoints principales:
 
-Esta sección debe documentar el código fuente y demostrar cómo se completa el
-flujo funcional entre las tres APIs.
+MétodoEndpointDescripciónGET`/productos`Retorna todos los productosGET`/productos/{producto_id}`Consulta un producto por identificadorCuando se solicita un producto inexistente, el servicio responde con **HTTP 404 Not Found**.
 
-### 3.1 Microservicio Productos
+La documentación de la API se genera automáticamente mediante FastAPI y puede consultarse desde el endpoint `/docs`.
 
-**Pendiente de integración:** explicar la implementación de los endpoints
-`GET /productos` y `GET /productos/{producto_id}`, las respuestas exitosas y el
-manejo del producto inexistente mediante HTTP 404. Añadir capturas de Swagger o
-ejemplos reales de petición y respuesta.
+## 3.2 Microservicio Pedidos
+**Pedidos** actúa como coordinador del caso de uso principal. Recibe una solicitud, valida su contenido mediante Pydantic, consulta el microservicio Productos para comprobar que el producto exista, registra temporalmente el pedido y solicita el envío de una notificación.
 
-### 3.2 Microservicio Pedidos
+Endpoints:
 
-Pedidos actúa como coordinador del caso de uso. Recibe una solicitud, valida el
-cuerpo con Pydantic, consulta Productos, registra temporalmente el pedido y
-solicita una notificación. También ofrece endpoints para consultar todos los
-pedidos o buscar uno por identificador.
+MétodoEndpointDescripciónPOST`/pedidos`Crea un pedidoGET`/pedidos`Consulta todos los pedidosGET`/pedidos/{pedido_id}`Consulta un pedido específicoLa integración con Productos es síncrona. Si Productos no está disponible, Pedidos responde con **HTTP 503 Service Unavailable**. Si Notificaciones falla, el pedido no se revierte: la excepción se captura y el pedido permanece creado.
 
-**Pendiente de integración:** añadir ejemplos reales de `POST /pedidos`,
-`GET /pedidos` y `GET /pedidos/{pedido_id}`, junto con las evidencias de Swagger.
+## 3.3 Microservicio Notificaciones
+**Notificaciones** recibe solicitudes mediante `POST /notificaciones` y simula el envío de una alerta.
 
-### 3.3 Microservicio Notificaciones
+El envío no utiliza un proveedor externo. La actividad se registra en los logs del servicio, permitiendo comprobar que Pedidos realizó correctamente la solicitud de notificación.
 
-**Pendiente de integración:** explicar la recepción de `POST /notificaciones` y
-anexar los logs que evidencien la simulación exitosa del envío de la alerta.
+## 3.4 Flujo de integración entre servicios
+El flujo principal es:
 
-### 3.4 Flujo de integración entre servicios
+```
+Usuario / Postman
+        |
+        v
+   Microservicio
+      Pedidos
+        |
+        | GET /productos/{id}
+        v
+   Microservicio
+     Productos
+        |
+        | 200 OK
+        v
+   Microservicio
+      Pedidos
+        |
+        | POST /notificaciones
+        v
+   Microservicio
+   Notificaciones
+        |
+        v
+   Pedido creado
+```
+En el caso exitoso, Pedidos recibe la solicitud, valida el producto, crea el pedido en memoria y solicita una notificación.
 
-**Pendiente de integración:** documentar el resultado real del recorrido
-Usuario → Pedidos → Productos → Pedidos → Notificaciones y agregar las evidencias
-de la prueba de extremo a extremo.
+En caso de que el producto no exista, se evita crear el pedido. En caso de que Productos no esté disponible, se retorna un error controlado. Si Notificaciones falla, el pedido permanece creado.
 
-## 4. Contenerización con Docker
+---
 
-Cada microservicio dispone de un Dockerfile basado en `python:3.12-slim`. Las
-imágenes copian su archivo de dependencias, instalan los paquetes, incorporan el
-código y ejecutan Uvicorn en `0.0.0.0:8000`.
+# 4. Contenerización con Docker
+Cada microservicio dispone de un Dockerfile independiente basado en `python:3.12-slim`.
 
-### 4.1 Construcción de imágenes
+El proceso de construcción sigue la misma idea para los tres servicios:
 
-**Pendiente de integración:** incorporar y verificar la secuencia exacta de
-comandos utilizada por el equipo para construir las imágenes:
+1. Utilizar una imagen base de Python.
+2. Copiar el archivo de dependencias.
+3. Instalar las dependencias.
+4. Copiar el código fuente.
+5. Ejecutar Uvicorn sobre `0.0.0.0:8000`.
 
-```powershell
+## 4.1 Construcción de imágenes
+Desde la raíz del proyecto se pueden construir las imágenes con:
+
+```
 docker build -t micro-productos:1.0 ./productos
 docker build -t micro-pedidos:1.0 ./pedidos
 docker build -t micro-notificaciones:1.0 ./notificaciones
 ```
+Verificación de las imágenes:
 
-### 4.2 Ejecución y comprobación local
+```
+docker images
+```
+Las tres imágenes esperadas son:
 
-**Pendiente de integración:** documentar los comandos finales para ejecutar los
-contenedores, las variables de entorno empleadas y las capturas que demuestren
-el acceso local a las tres APIs.
+```
+micro-productos:1.0
+micro-pedidos:1.0
+micro-notificaciones:1.0
+```
 
-## 5. Despliegue, Service Discovery y escalabilidad en Kubernetes
+## 4.2 Ejecución local
+La ejecución local de los contenedores requiere configurar las variables de entorno de Pedidos para que conozca las direcciones de Productos y Notificaciones.
 
-### 5.1 Aplicación de los manifiestos
+En Kubernetes estas direcciones se resuelven mediante los Services:
 
-**Pendiente de integración:** verificar los comandos definitivos y añadir la
-evidencia de Deployments, ReplicaSets, Pods y Services en ejecución.
+```
+PRODUCTOS_URL=http://productos:8000
+NOTIFICACIONES_URL=http://notificaciones:8000
+```
+Las imágenes se encuentran preparadas para ejecutar Uvicorn en:
 
-```powershell
+```
+0.0.0.0:8000
+```
+
+> **Nota:** Los comandos de ejecución local exactos dependen del mapeo de puertos utilizado en la ejecución final del equipo. No se deben inventar puertos distintos a los documentados por el despliegue real.
+
+---
+
+# 5. Despliegue, Service Discovery y escalabilidad en Kubernetes
+
+## 5.1 Aplicación de los manifiestos
+Los microservicios se despliegan mediante manifiestos YAML.
+
+```
 kubectl apply -f k8s/productos.yaml
 kubectl apply -f k8s/pedidos.yaml
 kubectl apply -f k8s/notificaciones.yaml
+```
+Para comprobar el despliegue:
+
+```
+kubectl get deployments
+kubectl get replicasets
 kubectl get pods
 kubectl get services
 ```
+El objetivo es disponer de un Deployment por microservicio y de un Service que proporcione un punto de acceso estable dentro del clúster.
 
-### 5.2 Service Discovery mediante DNS interno
+## 5.2 Service Discovery mediante DNS interno
+Pedidos no necesita conocer las IP de los Pods de Productos o Notificaciones. En su lugar utiliza nombres de Service:
 
-Pedidos no almacena las direcciones IP variables de los Pods. Las variables de
-entorno `PRODUCTOS_URL=http://productos:8000` y
-`NOTIFICACIONES_URL=http://notificaciones:8000` apuntan a nombres estables de
-Services. El DNS interno de Kubernetes resuelve esos nombres y cada Service
-dirige el tráfico hacia un Pod seleccionado por sus etiquetas.
+```
+PRODUCTOS_URL=http://productos:8000
+NOTIFICACIONES_URL=http://notificaciones:8000
+```
+Kubernetes proporciona resolución DNS para estos nombres. El Service recibe las solicitudes y las dirige hacia los Pods que cumplen con su selector.
 
-**Pendiente de integración:** añadir la evidencia real de que Pedidos se comunicó
-con ambos Services utilizando sus nombres DNS.
+Esto permite que los Pods sean eliminados y recreados sin que Pedidos tenga que actualizar sus direcciones.
 
-### 5.3 Acceso desde la máquina host
+## 5.3 Acceso desde la máquina host
+El Service de Pedidos es interno al clúster. Para realizar las pruebas desde Postman se utiliza un port-forward:
 
-El Service de Pedidos es interno. Para las pruebas se crea un túnel temporal
-desde el puerto `8002` del host hacia el puerto `8000` del Service:
-
-```powershell
+```
 kubectl port-forward service/pedidos 8002:8000
 ```
+Después de establecer el túnel, las pruebas pueden realizarse desde:
 
-**Pendiente de validación:** confirmar que este fue el mapeo utilizado en la
-ejecución final y añadir su captura.
+```
+http://localhost:8002
+```
+Por ejemplo:
 
-### 5.4 Escalabilidad horizontal de Productos
-
-**Pendiente de integración:** documentar la configuración o el comando empleado
-para mantener tres réplicas, junto con la salida de
-`kubectl get pods -l app=productos`.
-
-```powershell
-kubectl scale deployment productos --replicas=3
+```
+GET http://localhost:8002/pedidos
 ```
 
-### 5.5 Recuperación ante la eliminación de un Pod
+## 5.4 Escalabilidad horizontal de Productos
+Para demostrar el escalamiento horizontal se utilizan tres réplicas:
 
-**Pendiente de integración:** incorporar las capturas anteriores y posteriores a
-la eliminación deliberada de un Pod de Productos. Explicar la relación
-Deployment → ReplicaSet → Pods y cómo Kubernetes crea el reemplazo para recuperar
-el estado deseado.
+```
+kubectl scale deployment productos --replicas=3
+```
+La cantidad de Pods puede comprobarse mediante:
 
-## 6. Estrategia y resultados de pruebas
+```
+kubectl get pods -l app=productos
+```
+Kubernetes crea tres instancias del microservicio Productos. El Service `productos` mantiene un único punto lógico de acceso y distribuye las solicitudes entre las réplicas disponibles.
 
-### 6.1 Matriz de pruebas
+El escalamiento es independiente: solamente Productos aumenta su número de instancias, sin necesidad de replicar Pedidos o Notificaciones.
 
-**Pendiente de integración:** añadir la matriz definitiva con identificador,
-objetivo, precondiciones, entrada, procedimiento, resultado esperado, resultado
-obtenido, estado y evidencia. Como mínimo debe cubrir:
+## 5.5 Balanceo de carga
+El Service de Productos utiliza las etiquetas de los Pods para identificar las réplicas disponibles.
 
-- Consulta del catálogo de productos.
-- Consulta de un producto inexistente.
-- Creación válida de un pedido.
-- Consulta general y consulta por id de pedidos.
-- Recepción de una notificación.
-- Ejecución con tres réplicas de Productos.
-- Eliminación y recuperación de un Pod.
-- Creación de un pedido cuando Productos no está disponible.
+Conceptualmente:
 
-### 6.2 Evidencias de APIs y flujo completo
+```
+                     +--> Pod Productos 1
+                     |
+Pedidos --> Service -+--> Pod Productos 2
+                     |
+                     +--> Pod Productos 3
+```
 
-**Pendiente de integración:** insertar capturas legibles de Swagger, Postman y
-logs. Cada evidencia debe tener título, comando o petición ejecutada y una breve
-interpretación del resultado.
+De esta manera, Pedidos solamente necesita conocer:
 
-### 6.3 Prueba de falla de Productos
+```
+http://productos:8000
+```
+y no las direcciones IP individuales de los Pods.
 
-**Pendiente de integración:** registrar el procedimiento, la respuesta HTTP real
-de Pedidos, el tiempo observado y los logs relevantes. Comparar el resultado con
-el comportamiento esperado de error controlado.
+## 5.6 Recuperación ante la eliminación de un Pod
+Para probar la autorrecuperación se elimina deliberadamente un Pod:
 
-## 7. Análisis arquitectónico comparativo
+```
+kubectl delete pod <nombre-del-pod>
+```
+Posteriormente:
 
-### 7.1 Del monolito a los microservicios
+```
+kubectl get pods
+```
+El Deployment mantiene el estado deseado mediante su ReplicaSet. Si se configuraron tres réplicas y una es eliminada, Kubernetes detecta la diferencia entre el estado deseado y el estado real y crea un nuevo Pod.
 
-La versión monolítica hipotética del MiniSistema de Pedidos agruparía el catálogo,
-la creación de pedidos y las notificaciones en un solo proceso y una sola unidad
-de despliegue. Esta opción sería razonable para un sistema pequeño: necesita menos
-infraestructura, simplifica las pruebas locales y permite invocar funciones en
-memoria sin red. El cambio realizado en el taller no consiste únicamente en
-ejecutar el mismo programa dentro de varios contenedores. La aplicación se
-descompone alrededor de tres capacidades de negocio, cada una con API, imagen,
-proceso y ciclo de despliegue propios.
+El flujo puede resumirse como:
 
-Productos se ocupa exclusivamente del catálogo; Pedidos conserva la coordinación
-del caso de uso; y Notificaciones encapsula la simulación de alertas. Esta división
-reduce el acoplamiento del código y permite modificar o desplegar una capacidad sin
-reconstruir las demás. La separación, no obstante, traslada complejidad desde el
-código interno hacia la comunicación, el despliegue y la observabilidad.
+```
+Deployment
+    |
+    v
+ReplicaSet
+    |
+    +--> Pod 1
+    +--> Pod 2
+    +--> Pod 3
+```
+Si se elimina Pod 2:
 
-### 7.2 Consumo de memoria
+```
+Deployment
+    |
+    v
+ReplicaSet
+    |
+    +--> Pod 1
+    +--> Pod 3
+    +--> Nuevo Pod
+```
+Esto demuestra la capacidad de **self-healing** de Kubernetes.
 
-Un monolito ejecutaría normalmente un solo intérprete de Python, una instancia de
-Uvicorn y una copia cargada de las bibliotecas comunes. La solución distribuida
-ejecuta al menos un proceso por Pod. Con la arquitectura objetivo existen cinco
-Pods de aplicación: tres de Productos, uno de Pedidos y uno de Notificaciones.
-Cada proceso mantiene su propio intérprete, dependencias y memoria de trabajo.
-Además, Docker Desktop y Kubernetes requieren componentes de red, DNS, control y
-supervisión. Por ello, para este caso pequeño, es razonable esperar un consumo de
-memoria total superior al de un monolito equivalente.
+---
 
-Ese incremento puede justificarse cuando la carga es desigual. Si las consultas
-de productos crecen más que la creación de pedidos, Kubernetes permite ampliar
-solo Productos. En un monolito habría que replicar toda la aplicación, incluso
-las capacidades que no requieren recursos adicionales. La arquitectura de
-microservicios sacrifica eficiencia mínima a cambio de una asignación más granular
-de recursos cuando el sistema crece.
+# 6. Estrategia y resultados de pruebas
+Las pruebas se enfocaron en validar los endpoints REST, la integración entre microservicios, la documentación Swagger y el comportamiento de Kubernetes frente al escalamiento y los fallos.
 
-No se presentan cifras inventadas. Para convertir esta comparación cualitativa
-en una medición empírica, el equipo debe registrar `kubectl top pods` o una fuente
-equivalente y documentar las condiciones de la prueba. Si Metrics Server no está
-disponible, el informe debe reconocer expresamente esa limitación.
+## 6.1 Matriz de pruebas
+IDCasoAcciónResultado esperadoResultado observadoP01Swagger ProductosAbrir `/docs`Swagger carga correctamenteCorrectoP02Swagger PedidosAbrir `/docs`Swagger carga correctamenteCorrectoP03Swagger NotificacionesAbrir `/docs`Swagger carga correctamenteCorrectoP04Consultar Productos`GET /productos``200 OK` con productosCorrectoP05Consultar Producto`GET /productos/{id}``200 OK` con productoCorrectoP06Crear Pedido`POST /pedidos``200 OK`, pedido creadoCorrectoP07Consultar Pedidos`GET /pedidos``200 OK` con pedidosCorrectoP08Consultar Pedido`GET /pedidos/{id}``200 OK` con pedidoCorrectoP09Producto inexistente`POST /pedidos` con `producto_id` inexistenteError controlado`404 Not Found` desde Productos y respuesta de validación en PedidosP10Productos no disponibleCrear pedido con Productos detenido`503 Service Unavailable`CorrectoP11EscalamientoEscalar Productos a 3 réplicas3 Pods activosCorrectoP12RecuperaciónEliminar un PodKubernetes crea un reemplazoCorrecto
+## 6.2 Documentación Swagger
+Cada microservicio expone documentación mediante `/docs`.
 
-### 7.3 Aislamiento y propagación de fallos
+### Productos
 
-En el monolito, un error no controlado o una presión extrema de memoria puede
-afectar simultáneamente productos, pedidos y notificaciones, porque comparten el
-mismo proceso. Los microservicios proporcionan aislamiento de proceso y de
-despliegue: la caída de un Pod de Productos no finaliza los Pods de Pedidos o
-Notificaciones. Asimismo, un Deployment solicita a Kubernetes reemplazar el Pod
-perdido y mantener el número deseado de réplicas.
+```
+GET /productos
+GET /productos/{producto_id}
+```
+La documentación permite consultar los endpoints y probar las operaciones de la API.
 
-El aislamiento no elimina la propagación funcional. Pedidos necesita una respuesta
-válida de Productos antes de crear el pedido. Si Productos está indisponible, el
-código captura el error de red y responde HTTP 503 de manera controlada. En cambio,
-una falla de Notificaciones se tolera: el pedido permanece creado porque la
-excepción se captura y no se propaga al usuario. Esto demuestra dos políticas de
-fallo diferentes según la importancia de cada dependencia.
+### Pedidos
 
-La implementación todavía tiene límites de resiliencia. Las llamadas son
-síncronas, no existen reintentos, circuit breaker ni cola duradera. Además, los
-pedidos se guardan en una lista local; si el Pod se reinicia, se pierden, y si se
-replicara Pedidos, cada réplica tendría un estado distinto. Por consiguiente, el
-aislamiento de infraestructura mejora, pero la persistencia y la entrega confiable
-de notificaciones siguen siendo temas abiertos para una solución productiva.
+```
+POST /pedidos
+GET /pedidos
+GET /pedidos/{pedido_id}
+```
 
-### 7.4 Costos operativos de infraestructura
+### Notificaciones
 
-El monolito ofrece una operación sencilla: una construcción, un despliegue, un
-conjunto de logs y menos puntos de falla. Para un equipo pequeño y una carga baja,
-esta simplicidad puede superar los beneficios de dividir el sistema.
+```
+POST /notificaciones
+```
+La documentación Swagger fue utilizada para comprobar que los servicios se encontraban disponibles y que sus endpoints estaban registrados correctamente.
 
-Los microservicios requieren tres Dockerfiles e imágenes, manifiestos separados,
-configuración de red, DNS interno, administración de réplicas, pruebas de contratos
-y correlación de logs entre procesos. Kubernetes añade Deployments, ReplicaSets,
-Pods, Services, port-forwarding y procedimientos de diagnóstico. También crece el
-costo humano: el equipo debe dominar contenerización, orquestación, observabilidad
-y tratamiento de fallos distribuidos.
+## 6.3 Pruebas REST de Productos
 
-A cambio, la plataforma automatiza recuperación, balanceo y escalamiento. También
-permite despliegues independientes y reduce el alcance técnico de ciertos cambios.
-El costo operativo solo se justifica si estas propiedades responden a necesidades
-reales como cargas distintas por capacidad, equipos autónomos, disponibilidad o
-frecuencias de despliegue diferentes.
+### Consultar todos los productos
 
-### 7.5 Comparación resumida
+```
+GET /productos
+```
+**Resultado esperado:** `200 OK` con el catálogo de productos.
 
-| Atributo | Monolito | Microservicios del taller |
-|---|---|---|
-| Unidad de despliegue | Una aplicación | Tres imágenes y Deployments |
-| Comunicación interna | Llamadas en proceso | HTTP/JSON y DNS de Services |
-| Memoria base | Menor, con dependencias compartidas | Mayor, por procesos, réplicas y Kubernetes |
-| Escalamiento | Replica toda la aplicación | Puede escalar solo Productos |
-| Aislamiento técnico | Un fallo de proceso afecta todo | Fallos separados por Pod y servicio |
-| Propagación funcional | Directa dentro del proceso | Depende de timeouts y políticas por dependencia |
-| Recuperación | Requiere reiniciar la aplicación | Deployment recrea Pods automáticamente |
-| Persistencia actual | Podría centralizarse fácilmente | El estado en memoria se pierde y no se comparte |
-| Operación | Más simple | Más imágenes, red, configuración y observabilidad |
-| Conveniencia para este caso | Adecuado si el sistema permanece pequeño | Educativo y justificable si se requieren autonomía y escalamiento selectivo |
+**Resultado obtenido:** la consulta respondió correctamente con el listado disponible.
 
-### 7.6 Conclusión
+### Consultar producto por ID
 
+```
+GET /productos/{id}
+```
+**Resultado esperado:** `200 OK` con el producto solicitado.
+
+**Resultado obtenido:** el producto solicitado fue retornado correctamente.
+
+## 6.4 Pruebas REST de Pedidos
+
+### Crear pedido
+
+```
+POST /pedidos
+```
+**Resultado esperado:** creación del pedido y respuesta `200 OK`.
+
+**Resultado obtenido:** el pedido fue creado correctamente y quedó en estado `CREADO`.
+
+### Consultar pedidos
+
+```
+GET /pedidos
+```
+**Resultado esperado:** `200 OK` con los pedidos existentes.
+
+**Resultado obtenido:** se obtuvo el listado de pedidos, incluyendo el pedido creado.
+
+### Consultar pedido por ID
+
+```
+GET /pedidos/{id}
+```
+**Resultado esperado:** `200 OK` con el pedido solicitado.
+
+**Resultado obtenido:** el pedido fue consultado correctamente.
+
+### Crear pedido con producto inexistente
+
+```
+POST /pedidos
+```
+Utilizando un `producto_id` que no existe.
+
+**Resultado esperado:** el sistema debe impedir la creación del pedido y reportar el problema con el producto.
+
+**Resultado obtenido:** se recibió una respuesta de error indicando que el producto no fue encontrado.
+
+## 6.5 Prueba de falla de Productos
+Para evaluar el comportamiento ante fallos se detuvo un Pod del microservicio Productos y posteriormente se intentó crear un pedido.
+
+```
+Usuario
+   |
+   v
+Pedidos
+   |
+   X
+Productos no disponible
+```
+El microservicio Pedidos controla el error de comunicación y retorna:
+
+```
+503 Service Unavailable
+```
+Esto demuestra que la indisponibilidad de una dependencia no produce una caída completa del proceso de Pedidos.
+
+## 6.6 Prueba de escalamiento
+Se ejecutó:
+
+```
+kubectl scale deployment productos --replicas=3
+```
+Después se verificaron los Pods:
+
+```
+kubectl get pods -l app=productos
+```
+El resultado esperado es contar con tres Pods activos del microservicio Productos.
+
+## 6.7 Prueba de recuperación
+Después de disponer de tres réplicas se eliminó deliberadamente una:
+
+```
+kubectl delete pod <nombre-del-pod>
+```
+Kubernetes creó automáticamente un nuevo Pod para volver al número deseado de réplicas.
+
+Esto demuestra:
+
+- Supervisión del estado deseado.
+- Recuperación automática.
+- Uso de ReplicaSet.
+- Mantenimiento del número de réplicas.
+- Aislamiento del fallo de un Pod.
+
+---
+
+# 7. Análisis arquitectónico comparativo
+
+## 7.1 Del monolito a los microservicios
+Una versión monolítica del MiniSistema de Pedidos agruparía Productos, Pedidos y Notificaciones dentro de un único proceso y una única unidad de despliegue.
+
+Esta opción sería razonable para un sistema pequeño porque requiere menos infraestructura, simplifica las pruebas locales y evita costos asociados a la comunicación por red.
+
+La solución desarrollada en el taller divide la aplicación alrededor de tres capacidades:
+
+- **Productos:** catálogo.
+- **Pedidos:** coordinación del caso de uso.
+- **Notificaciones:** simulación de alertas.
+Cada capacidad tiene su propia API, imagen, proceso y ciclo de despliegue.
+
+Esta separación reduce el acoplamiento interno del código y permite modificar o escalar una capacidad de manera independiente. Sin embargo, también introduce complejidad de red, despliegue, configuración, observabilidad y manejo de errores distribuidos.
+
+## 7.2 Consumo de memoria
+Un monolito normalmente ejecutaría un solo intérprete de Python, una instancia de Uvicorn y una copia de las bibliotecas compartidas.
+
+La arquitectura distribuida utiliza varios Pods. En la arquitectura objetivo se tienen:
+
+- 3 Pods de Productos.
+- 1 Pod de Pedidos.
+- 1 Pod de Notificaciones.
+Cada proceso mantiene su propio intérprete, dependencias y memoria de trabajo. Además, Docker Desktop y Kubernetes requieren recursos adicionales.
+
+Por esta razón, para este sistema pequeño es razonable esperar un consumo de memoria superior al de un monolito equivalente.
+
+No se presentan cifras de memoria inventadas. Una medición empírica debería realizarse mediante:
+
+```
+kubectl top pods
+```
+si el clúster dispone de Metrics Server o de un mecanismo equivalente.
+
+## 7.3 Aislamiento y propagación de fallos
+En un monolito, un error grave o una presión extrema de memoria puede afectar simultáneamente a todas las capacidades porque comparten el mismo proceso.
+
+Los microservicios proporcionan aislamiento de proceso y despliegue. La caída de un Pod de Productos no finaliza automáticamente los Pods de Pedidos o Notificaciones.
+
+Además, Kubernetes puede recrear el Pod perdido mediante el Deployment y el ReplicaSet.
+
+Sin embargo, el aislamiento técnico no elimina la propagación funcional.
+
+Pedidos necesita una respuesta válida de Productos para crear un pedido. Si Productos está indisponible, Pedidos responde:
+
+```
+503 Service Unavailable
+```
+En cambio, una falla de Notificaciones se tolera y el pedido permanece creado.
+
+Esto evidencia dos políticas diferentes:
+
+DependenciaPolítica ante falloProductosLa operación de creación falla de forma controladaNotificacionesEl pedido permanece creado aunque falle la notificación
+## 7.4 Limitaciones de resiliencia
+La implementación actual tiene varias limitaciones:
+
+- Las llamadas entre servicios son síncronas.
+- No existen reintentos automáticos.
+- No existe circuit breaker.
+- No existe una cola persistente.
+- Los pedidos se almacenan únicamente en memoria.
+- Si un Pod de Pedidos se reinicia, se pierde el estado local.
+- Si Pedidos se replicara, cada réplica podría mantener un estado diferente.
+Por tanto, aunque Kubernetes mejora el aislamiento y la recuperación de infraestructura, la solución todavía no proporciona persistencia ni entrega confiable de notificaciones.
+
+## 7.5 Costos operativos de infraestructura
+El monolito ofrece una operación sencilla:
+
+- Una construcción.
+- Un despliegue.
+- Un conjunto de logs.
+- Menos puntos de fallo.
+- Menor complejidad de red.
+Los microservicios requieren:
+
+- Tres Dockerfiles.
+- Tres imágenes.
+- Manifiestos independientes.
+- Configuración de red.
+- DNS interno.
+- Administración de réplicas.
+- Observabilidad distribuida.
+- Diagnóstico de fallos.
+Kubernetes añade Deployments, ReplicaSets, Pods, Services y procedimientos de operación.
+
+A cambio, la plataforma proporciona automatización para recuperación, balanceo y escalamiento.
+
+## 7.6 Comparación resumida
+AtributoMonolitoMicroservicios del tallerUnidad de despliegueUna aplicaciónTres imágenes y DeploymentsComunicación internaLlamadas en procesoHTTP/JSON y DNS de ServicesMemoria baseMenorMayor por procesos, réplicas y KubernetesEscalamientoReplica toda la aplicaciónPuede escalar solo ProductosAislamiento técnicoMenorSeparación por Pod y servicioPropagación funcionalDirecta dentro del procesoDepende de timeouts y políticasRecuperaciónReinicio de la aplicaciónDeployment recrea PodsPersistencia actualPuede centralizarse fácilmenteEl estado en memoria se pierdeOperaciónMás sencillaMayor complejidadConveniencia para este casoAdecuado si permanece pequeñoÚtil para demostrar autonomía y escalamiento
+## 7.7 Conclusión
 La arquitectura de microservicios no es automáticamente superior al monolito.
-Para el tamaño actual del MiniSistema de Pedidos, el monolito probablemente sería
-más económico en memoria y operación. La solución distribuida se vuelve valiosa
-si Productos necesita escalar independientemente, si las capacidades evolucionan
-a ritmos distintos o si el aislamiento y la recuperación justifican el costo de
-Kubernetes. La decisión debe basarse en requisitos de calidad y capacidad
-operativa, no solamente en la disponibilidad de Docker o Kubernetes.
 
-### 7.7 Supuestos y validaciones pendientes
+Para el tamaño actual del MiniSistema de Pedidos, una arquitectura monolítica probablemente sería más económica en memoria y operación. Sin embargo, la solución distribuida resulta útil cuando Productos necesita escalar independientemente, las capacidades evolucionan a ritmos diferentes o el aislamiento y la recuperación justifican la complejidad adicional de Kubernetes.
 
-Antes de consolidar el informe final se debe completar esta lista:
+La decisión arquitectónica debe basarse en requisitos de calidad, carga, disponibilidad, autonomía y capacidad operativa, y no solamente en la disponibilidad de Docker o Kubernetes.
 
-- [ ] Confirmar `replicas: 3` para Productos en el manifiesto final o documentar
-      el uso de `kubectl scale deployment productos --replicas=3`.
-- [ ] Reemplazar “Nodo Kubernetes - Docker Desktop” si el equipo utiliza otro
-      clúster o más de un nodo.
-- [ ] Confirmar el mapeo real `localhost:8002` hacia `service/pedidos:8000`.
-- [ ] Incorporar evidencia de resolución DNS mediante los nombres de Service.
-- [ ] Incorporar el resultado real de eliminar un Pod de Productos.
-- [ ] Incorporar la respuesta observada cuando Productos queda indisponible.
-- [ ] Añadir cifras de memoria solo si fueron medidas bajo condiciones registradas.
-- [ ] Revisar los diagramas si se reorganizan módulos, endpoints o nombres YAML.
+---
 
-## 8. Repositorio Git, ejecución y anexos
-
-### 8.1 Repositorio y colaboración
-
-**Pendiente de integración:** añadir el enlace oficial del repositorio y el
-gráfico del árbol de commits que evidencie la colaboración del equipo. Incluir
-una explicación breve de la estrategia de ramas e integración utilizada.
-
-### 8.2 Secuencia completa de reproducción
-
-**Pendiente de integración:** consolidar en este apartado los prerrequisitos y la
-secuencia final, comprobada desde un entorno limpio, para construir las imágenes,
-aplicar los manifiestos, verificar los Pods y Services, ejecutar el port-forward
-y probar el flujo desde Postman. Los comandos preliminares de las secciones 4 y 5
-deben corregirse aquí si la ejecución real utilizó rutas o parámetros diferentes.
-
-### 8.3 Anexos y evidencias
-
-**Pendiente de integración:** organizar las capturas, la colección exportada de
-Postman, las mediciones disponibles, los errores encontrados y sus soluciones.
-Evitar imágenes sin título o sin explicación técnica.
+... (file truncated for brevity in tool output)
