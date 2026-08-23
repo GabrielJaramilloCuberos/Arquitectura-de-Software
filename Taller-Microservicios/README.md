@@ -273,7 +273,76 @@ Usuario / Postman
 ```
 En el caso exitoso, Pedidos recibe la solicitud, valida el producto, crea el pedido en memoria y solicita una notificación.
 
+<<<<<<< HEAD
 En caso de que el producto no exista, se evita crear el pedido. En caso de que Productos no esté disponible, se retorna un error controlado. Si Notificaciones falla, el pedido permanece creado.
+=======
+El flujo de integración conecta las tres capacidades mediante llamadas HTTP/JSON
+síncronas y Service Discovery por DNS interno de Kubernetes. Ningún microservicio
+conoce direcciones IP de Pods: `pedidos` resuelve a los otros dos únicamente por
+el nombre estable de su Service (`productos`, `notificaciones`), inyectado por las
+variables de entorno `PRODUCTOS_URL` y `NOTIFICACIONES_URL` definidas en
+`k8s/pedidos.yaml`.
+
+**Secuencia de comunicación HTTP:**
+
+1. El usuario (Postman) envía `POST /pedidos` al Service `pedidos`, expuesto en
+   el host mediante `kubectl port-forward service/pedidos 8002:8000`.
+2. `pedidos/app/main.py` valida el cuerpo con Pydantic (`producto_id`,
+   `cantidad > 0`) y realiza `GET http://productos:8000/productos/{producto_id}`
+   con un timeout de 3 segundos.
+   - Si Productos no responde (excepción de red), Pedidos devuelve `503` sin
+     llegar a crear el pedido.
+   - Si Productos responde `404`, Pedidos traduce el error a `400 Producto no
+     encontrado`.
+   - Con `200`, Pedidos toma el nombre del producto y continúa el flujo.
+3. Pedidos genera un `pedido_id` secuencial en memoria y guarda el pedido con
+   estado `CREADO`.
+4. Pedidos realiza `POST http://notificaciones:8000/notificaciones` con
+   `{pedido_id, mensaje}`, también con timeout de 3 segundos.
+   - Notificaciones registra el mensaje en su salida estándar (`print`) y
+     responde `200 {"estado": "ENVIADA", "pedido_id": ...}`.
+   - Esta llamada es de mejor esfuerzo: si falla o vence el timeout, la
+     excepción se captura y se descarta (`except requests.RequestException:
+     pass`). El pedido ya creado en el paso 3 **no se revierte**. Es una
+     decisión deliberada del taller para desacoplar temporalmente la creación
+     del pedido de la disponibilidad de Notificaciones, a costa de no
+     garantizar la entrega de la alerta (sin reintentos ni cola de mensajes).
+5. Pedidos responde al usuario con el pedido creado, independientemente del
+   resultado del paso 4.
+
+Este acoplamiento es exclusivamente de contrato HTTP/JSON y de nombre DNS: los
+tres servicios corren en procesos, imágenes y Pods independientes, y ninguno
+comparte memoria ni almacenamiento con los demás. El diagrama de secuencia
+completo, incluidas las rutas alternativas de error, está en la
+[sección 2.3](#23-diagrama-de-componentes-de-pedidos---c4-nivel-3).
+
+**Prueba de extremo a extremo (crear pedido → notificar):**
+
+Procedimiento reproducible para generar la evidencia de esta sección:
+
+```powershell
+kubectl apply -f k8s/productos.yaml
+kubectl apply -f k8s/pedidos.yaml
+kubectl apply -f k8s/notificaciones.yaml
+kubectl get pods
+kubectl port-forward service/pedidos 8002:8000
+```
+
+En otra terminal, seguir los logs de Notificaciones en tiempo real:
+
+```powershell
+kubectl logs -f deployment/notificaciones
+```
+
+Desde Postman, enviar `POST http://localhost:8002/pedidos` con cuerpo
+`{"producto_id": 1, "cantidad": 2}`. El log del contenedor de Notificaciones
+debe mostrar `NOTIFICACIÓN ENVIADA - Pedido <id>: Pedido creado para <producto>`
+en el mismo instante en que Postman recibe la respuesta `200` de Pedidos.
+
+**Pendiente de validación:** insertar la captura de pantalla de `kubectl logs -f`
+junto a la petición de Postman correspondiente, y confirmar que el `pedido_id`
+mostrado en el log coincide con el de la respuesta HTTP recibida por el usuario.
+>>>>>>> 7dbf2dbb5fd75be074fc607dc4a5adcdbeca5a18
 
 ---
 
