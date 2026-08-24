@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1080" viewBox="0 0 1700 1080">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#17365D" flood-opacity="0.14"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6B7C8F"/></marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F75B5"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#1D2733}
+      .title{font-size:34px;font-weight:700;fill:#17365D}
+      .subtitle{font-size:18px;fill:#536273}
+      .boxTitle{font-size:20px;font-weight:700}
+      .body{font-size:16px}
+      .small{font-size:14px;fill:#536273}
+      .edge{font-size:14px;font-weight:600;fill:#536273}
+      .zone{font-size:20px;font-weight:700;fill:#17365D}
+    </style>
+  </defs>
+  <rect width="1700" height="1080" fill="#F7FAFC"/>
+  <text x="850" y="52" text-anchor="middle" class="title">SERVI-RED - Diagrama de Contexto (C4 Nivel 1)</text>
+  <text x="850" y="82" text-anchor="middle" class="subtitle">Actores y sistemas externos que interactúan con la plataforma</text><g filter="url(#shadow)">
+    <rect x="575" y="320" width="550" height="260" rx="14" fill="#D9EAF7" stroke="#17365D" stroke-width="2"/>
+    <text x="850" y="351" text-anchor="middle" class="boxTitle" fill="#17365D">SERVI-RED</text>
+    <text x="850" y="380" text-anchor="middle" class="body"><tspan x="850" dy="0">Plataforma colaborativa de reporte,</tspan><tspan x="850" dy="21">monitoreo e indicadores de</tspan><tspan x="850" dy="21">servicios públicos domiciliarios</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="70" y="150" width="310" height="120" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="225" y="181" text-anchor="middle" class="boxTitle" fill="#17365D">Ciudadano</text>
+    <text x="225" y="210" text-anchor="middle" class="body"><tspan x="225" dy="0">Reporta y valida novedades</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="70" y="350" width="310" height="120" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="225" y="381" text-anchor="middle" class="boxTitle" fill="#17365D">Operador</text>
+    <text x="225" y="410" text-anchor="middle" class="body"><tspan x="225" dy="0">Atiende y cierra casos</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="70" y="550" width="310" height="120" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="225" y="581" text-anchor="middle" class="boxTitle" fill="#17365D">Regulador</text>
+    <text x="225" y="610" text-anchor="middle" class="body"><tspan x="225" dy="0">Fiscaliza y exporta datos</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="70" y="750" width="310" height="120" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="225" y="781" text-anchor="middle" class="boxTitle" fill="#17365D">Público / Academia</text>
+    <text x="225" y="810" text-anchor="middle" class="body"><tspan x="225" dy="0">Consulta indicadores abiertos</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1320" y="130" width="310" height="120" rx="14" fill="#EEF5FA" stroke="#D6AD3C" stroke-width="2"/>
+    <text x="1475" y="161" text-anchor="middle" class="boxTitle" fill="#17365D">Sistemas de operadores</text>
+    <text x="1475" y="190" text-anchor="middle" class="body"><tspan x="1475" dy="0">Reciben casos y estados</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1320" y="310" width="310" height="120" rx="14" fill="#EEF5FA" stroke="#D6AD3C" stroke-width="2"/>
+    <text x="1475" y="341" text-anchor="middle" class="boxTitle" fill="#17365D">Plataformas regulatorias</text>
+    <text x="1475" y="370" text-anchor="middle" class="body"><tspan x="1475" dy="0">Reciben información oficial</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1320" y="490" width="310" height="120" rx="14" fill="#EEF5FA" stroke="#D6AD3C" stroke-width="2"/>
+    <text x="1475" y="521" text-anchor="middle" class="boxTitle" fill="#17365D">Canales de notificación</text>
+    <text x="1475" y="550" text-anchor="middle" class="body"><tspan x="1475" dy="0">Entregan confirmaciones</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1320" y="670" width="310" height="120" rx="14" fill="#EEF5FA" stroke="#D6AD3C" stroke-width="2"/>
+    <text x="1475" y="701" text-anchor="middle" class="boxTitle" fill="#17365D">Cartografía abierta</text>
+    <text x="1475" y="730" text-anchor="middle" class="body"><tspan x="1475" dy="0">Referencia geográfica</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1320" y="850" width="310" height="120" rx="14" fill="#F7E4E4" stroke="#A84242" stroke-width="2"/>
+    <text x="1475" y="881" text-anchor="middle" class="boxTitle" fill="#17365D">Operación y seguridad</text>
+    <text x="1475" y="910" text-anchor="middle" class="body"><tspan x="1475" dy="0">Monitorea e investiga</tspan></text>
+  </g><g>
+    <path d="M380,210 L575,365" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="403.9" y="262.5" width="147.20000000000002" height="23" rx="5" fill="#F7FAFC"/><text x="477.5" y="278.5" text-anchor="middle" class="edge">Reporta y consulta</text>
+  </g><g>
+    <path d="M380,410 L575,430" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="418.7" y="395" width="117.60000000000001" height="23" rx="5" fill="#F7FAFC"/><text x="477.5" y="411" text-anchor="middle" class="edge">Gestiona casos</text>
+  </g><g>
+    <path d="M380,610 L575,495" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="403.9" y="527.5" width="147.20000000000002" height="23" rx="5" fill="#F7FAFC"/><text x="477.5" y="543.5" text-anchor="middle" class="edge">Consulta y exporta</text>
+  </g><g>
+    <path d="M380,810 L670,580" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="469.9" y="670" width="110.2" height="23" rx="5" fill="#F7FAFC"/><text x="525" y="686" text-anchor="middle" class="edge">Explora datos</text>
+  </g><g>
+    <path d="M1125,355 L1320,190" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="1152.6" y="247.5" width="139.8" height="23" rx="5" fill="#F7FAFC"/><text x="1222.5" y="263.5" text-anchor="middle" class="edge">Intercambia casos</text>
+  </g><g>
+    <path d="M1125,415 L1320,370" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="1167.4" y="367.5" width="110.2" height="23" rx="5" fill="#F7FAFC"/><text x="1222.5" y="383.5" text-anchor="middle" class="edge">Publica datos</text>
+  </g><g>
+    <path d="M1125,475 L1320,550" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="1160" y="487.5" width="125" height="23" rx="5" fill="#F7FAFC"/><text x="1222.5" y="503.5" text-anchor="middle" class="edge">Solicita avisos</text>
+  </g><g>
+    <path d="M1125,530 L1320,730" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="1163.7" y="605" width="117.60000000000001" height="23" rx="5" fill="#F7FAFC"/><text x="1222.5" y="621" text-anchor="middle" class="edge">Consulta mapas</text>
+  </g><g>
+    <path d="M1320,910 L1125,555" fill="none" stroke="#6B7C8F" stroke-width="2.3" stroke-dasharray="8 6" marker-end="url(#arrow)"/>
+    <rect x="1182.2" y="707.5" width="80.60000000000001" height="23" rx="5" fill="#F7FAFC"/><text x="1222.5" y="723.5" text-anchor="middle" class="edge">Supervisa</text>
+  </g><text x="850" y="1015" text-anchor="middle" class="small"><tspan x="850" dy="0">Límite del sistema: SERVI-RED transforma reportes ciudadanos en casos, indicadores y evidencia trazable.</tspan></text></svg>

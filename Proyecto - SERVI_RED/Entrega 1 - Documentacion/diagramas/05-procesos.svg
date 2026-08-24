@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1050" viewBox="0 0 1800 1050">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#17365D" flood-opacity="0.14"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6B7C8F"/></marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F75B5"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#1D2733}
+      .title{font-size:34px;font-weight:700;fill:#17365D}
+      .subtitle{font-size:18px;fill:#536273}
+      .boxTitle{font-size:20px;font-weight:700}
+      .body{font-size:16px}
+      .small{font-size:14px;fill:#536273}
+      .edge{font-size:14px;font-weight:600;fill:#536273}
+      .zone{font-size:20px;font-weight:700;fill:#17365D}
+    </style>
+  </defs>
+  <rect width="1800" height="1050" fill="#F7FAFC"/>
+  <text x="900" y="52" text-anchor="middle" class="title">SERVI-RED - Vista de Procesos</text>
+  <text x="900" y="82" text-anchor="middle" class="subtitle">Separación entre camino crítico, trabajo desacoplado y capas transversales</text><text x="80" y="160" class="zone">Camino síncrono (el ciudadano espera)</text><g filter="url(#shadow)">
+    <rect x="90" y="220" width="240" height="120" rx="14" fill="#D9EAF7" stroke="#17365D" stroke-width="2"/>
+    <text x="210" y="251" text-anchor="middle" class="boxTitle" fill="#17365D">Recepción</text>
+    <text x="210" y="280" text-anchor="middle" class="body"><tspan x="210" dy="0">Solicitud</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="390" y="220" width="240" height="120" rx="14" fill="#D9EAF7" stroke="#17365D" stroke-width="2"/>
+    <text x="510" y="251" text-anchor="middle" class="boxTitle" fill="#17365D">Autenticación</text>
+    <text x="510" y="280" text-anchor="middle" class="body"><tspan x="510" dy="0">y autorización</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="690" y="220" width="240" height="120" rx="14" fill="#D9EAF7" stroke="#17365D" stroke-width="2"/>
+    <text x="810" y="251" text-anchor="middle" class="boxTitle" fill="#17365D">Validación</text>
+    <text x="810" y="280" text-anchor="middle" class="body"><tspan x="810" dy="0">mínima</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="990" y="220" width="240" height="120" rx="14" fill="#D9EAF7" stroke="#17365D" stroke-width="2"/>
+    <text x="1110" y="251" text-anchor="middle" class="boxTitle" fill="#17365D">Registro</text>
+    <text x="1110" y="280" text-anchor="middle" class="body"><tspan x="1110" dy="0">transaccional</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1290" y="220" width="240" height="120" rx="14" fill="#D9EAF7" stroke="#17365D" stroke-width="2"/>
+    <text x="1410" y="251" text-anchor="middle" class="boxTitle" fill="#17365D">Confirmación</text>
+    <text x="1410" y="280" text-anchor="middle" class="body"><tspan x="1410" dy="0">al ciudadano</tspan></text>
+  </g><g>
+    <path d="M330,280 L390,280" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    
+  </g><g>
+    <path d="M630,280 L690,280" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    
+  </g><g>
+    <path d="M930,280 L990,280" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    
+  </g><g>
+    <path d="M1230,280 L1290,280" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    
+  </g><text x="80" y="455" class="zone">Procesamiento desacoplado (no bloquea el reporte)</text><g filter="url(#shadow)">
+    <rect x="190" y="520" width="260" height="125" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="320" y="551" text-anchor="middle" class="boxTitle" fill="#17365D">Atención operacional</text>
+    <text x="320" y="580" text-anchor="middle" class="body"><tspan x="320" dy="0">Asignar y priorizar</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="590" y="520" width="260" height="125" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="720" y="551" text-anchor="middle" class="boxTitle" fill="#17365D">Notificaciones</text>
+    <text x="720" y="580" text-anchor="middle" class="body"><tspan x="720" dy="0">Confirmar y avisar</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="990" y="520" width="260" height="125" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="1120" y="551" text-anchor="middle" class="boxTitle" fill="#17365D">Indicadores</text>
+    <text x="1120" y="580" text-anchor="middle" class="body"><tspan x="1120" dy="0">Actualizar agregados</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1390" y="520" width="260" height="125" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="1520" y="551" text-anchor="middle" class="boxTitle" fill="#17365D">Integraciones</text>
+    <text x="1520" y="580" text-anchor="middle" class="body"><tspan x="1520" dy="0">Operadores y reguladores</tspan></text>
+  </g><g><path d="M1110,340 L1110,430 L320,430 L320,520" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <text x="720" y="421" text-anchor="middle" class="edge">Evento aceptado</text></g><g><path d="M1110,430 L720,430 L720,520" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    </g><g><path d="M1110,430 L1120,520" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    </g><g><path d="M1110,430 L1520,430 L1520,520" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    </g><g filter="url(#shadow)">
+    <rect x="110" y="800" width="720" height="140" rx="14" fill="#EEE7F3" stroke="#71538A" stroke-width="2"/>
+    <text x="470" y="831" text-anchor="middle" class="boxTitle" fill="#17365D">Seguridad transversal</text>
+    <text x="470" y="860" text-anchor="middle" class="body"><tspan x="470" dy="0">Autenticación · RBAC · cifrado · privacidad · auditoría</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="970" y="800" width="720" height="140" rx="14" fill="#F7E4E4" stroke="#A84242" stroke-width="2"/>
+    <text x="1330" y="831" text-anchor="middle" class="boxTitle" fill="#17365D">Observabilidad transversal</text>
+    <text x="1330" y="860" text-anchor="middle" class="body"><tspan x="1330" dy="0">Monitoreo de procesos · logs · métricas · trazas · alertas</tspan></text>
+  </g><g><path d="M470,800 L470,730 L900,730 L900,645" fill="none" stroke="#6B7C8F" stroke-width="2.3" stroke-dasharray="8 6" marker-end="url(#arrow)"/>
+    <text x="680" y="721" text-anchor="middle" class="edge">Controla todos los flujos</text></g><g><path d="M1330,800 L1330,730 L900,730 L900,645" fill="none" stroke="#A84242" stroke-width="2.3" stroke-dasharray="8 6" marker-end="url(#arrow)"/>
+    <text x="1150" y="721" text-anchor="middle" class="edge">Observa todos los flujos</text></g></svg>

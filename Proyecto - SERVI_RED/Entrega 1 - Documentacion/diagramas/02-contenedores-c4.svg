@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1420" viewBox="0 0 1900 1420">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#17365D" flood-opacity="0.14"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6B7C8F"/></marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F75B5"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#1D2733}
+      .title{font-size:34px;font-weight:700;fill:#17365D}
+      .subtitle{font-size:18px;fill:#536273}
+      .boxTitle{font-size:20px;font-weight:700}
+      .body{font-size:16px}
+      .small{font-size:14px;fill:#536273}
+      .edge{font-size:14px;font-weight:600;fill:#536273}
+      .zone{font-size:20px;font-weight:700;fill:#17365D}
+    </style>
+  </defs>
+  <rect width="1900" height="1420" fill="#F7FAFC"/>
+  <text x="950" y="52" text-anchor="middle" class="title">SERVI-RED - Diagrama de Contenedores Lógicos (C4 Nivel 2)</text>
+  <text x="950" y="82" text-anchor="middle" class="subtitle">Unidades ejecutables y almacenes lógicos; no implica una tecnología específica</text><rect x="55" y="110" width="1790" height="1210" rx="24" fill="none" stroke="#17365D" stroke-width="3"/><text x="85" y="150" class="zone">Límite de SERVI-RED</text><g filter="url(#shadow)">
+    <rect x="110" y="190" width="390" height="120" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="305" y="221" text-anchor="middle" class="boxTitle" fill="#17365D">Canal ciudadano móvil</text>
+    <text x="305" y="250" text-anchor="middle" class="body"><tspan x="305" dy="0">Reportar, consultar y validar</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="755" y="190" width="390" height="120" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="950" y="221" text-anchor="middle" class="boxTitle" fill="#17365D">Portal operacional</text>
+    <text x="950" y="250" text-anchor="middle" class="body"><tspan x="950" dy="0">Atención, moderación y administración</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1400" y="190" width="390" height="120" rx="14" fill="#E2F0E8" stroke="#3E7D5B" stroke-width="2"/>
+    <text x="1595" y="221" text-anchor="middle" class="boxTitle" fill="#17365D">Portal público</text>
+    <text x="1595" y="250" text-anchor="middle" class="body"><tspan x="1595" dy="0">Mapas, indicadores y datos abiertos</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="630" y="385" width="640" height="105" rx="14" fill="#D9EAF7" stroke="#17365D" stroke-width="2"/>
+    <text x="950" y="416" text-anchor="middle" class="boxTitle" fill="#17365D">Fachada de servicios</text>
+    <text x="950" y="445" text-anchor="middle" class="body"><tspan x="950" dy="0">Contratos, validación de entrada y políticas comunes</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="110" y="585" width="390" height="145" rx="14" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
+    <text x="305" y="616" text-anchor="middle" class="boxTitle" fill="#17365D">Identidad y acceso</text>
+    <text x="305" y="645" text-anchor="middle" class="body"><tspan x="305" dy="0">Autenticación, RBAC</tspan><tspan x="305" dy="21">y sesiones</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="540" y="585" width="390" height="145" rx="14" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
+    <text x="735" y="616" text-anchor="middle" class="boxTitle" fill="#17365D">Gestión de reportes</text>
+    <text x="735" y="645" text-anchor="middle" class="body"><tspan x="735" dy="0">Cortes, restablecimientos</tspan><tspan x="735" dy="21">fraudes y evidencias</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="970" y="585" width="390" height="145" rx="14" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
+    <text x="1165" y="616" text-anchor="middle" class="boxTitle" fill="#17365D">Atención operacional</text>
+    <text x="1165" y="645" text-anchor="middle" class="body"><tspan x="1165" dy="0">Asignación, prioridad</tspan><tspan x="1165" dy="21">moderación y cierre</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1400" y="585" width="390" height="145" rx="14" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
+    <text x="1595" y="616" text-anchor="middle" class="boxTitle" fill="#17365D">Información geográfica</text>
+    <text x="1595" y="645" text-anchor="middle" class="body"><tspan x="1595" dy="0">Territorio, mapas</tspan><tspan x="1595" dy="21">y agregación espacial</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="325" y="805" width="390" height="145" rx="14" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
+    <text x="520" y="836" text-anchor="middle" class="boxTitle" fill="#17365D">Indicadores y datos abiertos</text>
+    <text x="520" y="865" text-anchor="middle" class="body"><tspan x="520" dy="0">Estadísticas, publicación</tspan><tspan x="520" dy="21">y exportaciones</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="755" y="805" width="390" height="145" rx="14" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
+    <text x="950" y="836" text-anchor="middle" class="boxTitle" fill="#17365D">Notificaciones</text>
+    <text x="950" y="865" text-anchor="middle" class="body"><tspan x="950" dy="0">Confirmaciones, avisos</tspan><tspan x="950" dy="21">y reintentos</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1185" y="805" width="390" height="145" rx="14" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
+    <text x="1380" y="836" text-anchor="middle" class="boxTitle" fill="#17365D">Auditoría y trazabilidad</text>
+    <text x="1380" y="865" text-anchor="middle" class="body"><tspan x="1380" dy="0">Acciones de negocio</tspan><tspan x="1380" dy="21">y seguridad</tspan></text>
+  </g><g filter="url(#shadow)">
+    <path d="M120,1101 C120,1081 470,1081 470,1101 L470,1219 C470,1239 120,1239 120,1219 Z" fill="#EEE7F3" stroke="#71538A" stroke-width="2"/>
+    <ellipse cx="295" cy="1101" rx="175" ry="16" fill="#EEE7F3" stroke="#71538A" stroke-width="2"/>
+    <text x="295" y="1136" text-anchor="middle" class="boxTitle">Datos operacionales</text>
+    <text x="295" y="1162" text-anchor="middle" class="body"><tspan x="295" dy="0">Reportes, estados</tspan><tspan x="295" dy="21">y asignaciones</tspan></text>
+  </g><g filter="url(#shadow)">
+    <path d="M555,1101 C555,1081 905,1081 905,1101 L905,1219 C905,1239 555,1239 555,1219 Z" fill="#EEE7F3" stroke="#71538A" stroke-width="2"/>
+    <ellipse cx="730" cy="1101" rx="175" ry="16" fill="#EEE7F3" stroke="#71538A" stroke-width="2"/>
+    <text x="730" y="1136" text-anchor="middle" class="boxTitle">Evidencias</text>
+    <text x="730" y="1162" text-anchor="middle" class="body"><tspan x="730" dy="0">Fotografías y</tspan><tspan x="730" dy="21">adjuntos protegidos</tspan></text>
+  </g><g filter="url(#shadow)">
+    <path d="M990,1101 C990,1081 1340,1081 1340,1101 L1340,1219 C1340,1239 990,1239 990,1219 Z" fill="#EEE7F3" stroke="#71538A" stroke-width="2"/>
+    <ellipse cx="1165" cy="1101" rx="175" ry="16" fill="#EEE7F3" stroke="#71538A" stroke-width="2"/>
+    <text x="1165" y="1136" text-anchor="middle" class="boxTitle">Datos analíticos</text>
+    <text x="1165" y="1162" text-anchor="middle" class="body"><tspan x="1165" dy="0">Agregados e</tspan><tspan x="1165" dy="21">indicadores</tspan></text>
+  </g><g filter="url(#shadow)">
+    <path d="M1425,1101 C1425,1081 1775,1081 1775,1101 L1775,1219 C1775,1239 1425,1239 1425,1219 Z" fill="#EEE7F3" stroke="#71538A" stroke-width="2"/>
+    <ellipse cx="1600" cy="1101" rx="175" ry="16" fill="#EEE7F3" stroke="#71538A" stroke-width="2"/>
+    <text x="1600" y="1136" text-anchor="middle" class="boxTitle">Bitácora</text>
+    <text x="1600" y="1162" text-anchor="middle" class="body"><tspan x="1600" dy="0">Auditoría</tspan><tspan x="1600" dy="21">protegida</tspan></text>
+  </g><g filter="url(#shadow)">
+    <rect x="1470" y="380" width="300" height="115" rx="14" fill="#F7E4E4" stroke="#A84242" stroke-width="2"/>
+    <text x="1620" y="411" text-anchor="middle" class="boxTitle" fill="#17365D">Observabilidad</text>
+    <text x="1620" y="440" text-anchor="middle" class="body"><tspan x="1620" dy="0">Logs, métricas, trazas</tspan><tspan x="1620" dy="21">y alertas</tspan></text>
+  </g><g>
+    <path d="M305,310 L750,385" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="487.2" y="322.5" width="80.60000000000001" height="23" rx="5" fill="#F7FAFC"/><text x="527.5" y="338.5" text-anchor="middle" class="edge">Contratos</text>
+  </g><g>
+    <path d="M950,310 L950,385" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="909.7" y="322.5" width="80.60000000000001" height="23" rx="5" fill="#F7FAFC"/><text x="950" y="338.5" text-anchor="middle" class="edge">Contratos</text>
+  </g><g>
+    <path d="M1595,310 L1150,385" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="1332.2" y="322.5" width="80.60000000000001" height="23" rx="5" fill="#F7FAFC"/><text x="1372.5" y="338.5" text-anchor="middle" class="edge">Consultas</text>
+  </g><g><path d="M830,490 L830,535 L305,535 L305,585" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <text x="510" y="526" text-anchor="middle" class="edge">Autoriza</text></g><g>
+    <path d="M900,490 L735,585" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="780.9" y="512.5" width="73.2" height="23" rx="5" fill="#F7FAFC"/><text x="817.5" y="528.5" text-anchor="middle" class="edge">Reportes</text>
+  </g><g>
+    <path d="M980,490 L1165,585" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="1047" y="512.5" width="51" height="23" rx="5" fill="#F7FAFC"/><text x="1072.5" y="528.5" text-anchor="middle" class="edge">Casos</text>
+  </g><g><path d="M1050,490 L1050,535 L1595,535 L1595,585" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <text x="1380" y="526" text-anchor="middle" class="edge">Ubicación</text></g><g>
+    <path d="M735,730 L500,805" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="584.6" y="742.5" width="65.80000000000001" height="23" rx="5" fill="#F7FAFC"/><text x="617.5" y="758.5" text-anchor="middle" class="edge">Eventos</text>
+  </g><g>
+    <path d="M800,730 L950,805" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="845.8" y="742.5" width="58.400000000000006" height="23" rx="5" fill="#F7FAFC"/><text x="875" y="758.5" text-anchor="middle" class="edge">Avisos</text>
+  </g><g>
+    <path d="M1165,730 L1380,805" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="1243.3" y="742.5" width="58.400000000000006" height="23" rx="5" fill="#F7FAFC"/><text x="1272.5" y="758.5" text-anchor="middle" class="edge">Audita</text>
+  </g><g>
+    <path d="M735,730 L295,1085" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="473.4" y="914" width="73.2" height="23" rx="5" fill="#F7FAFC"/><text x="510" y="930" text-anchor="middle" class="edge">Persiste</text>
+  </g><g>
+    <path d="M790,730 L730,1085" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="708.4" y="944" width="73.2" height="23" rx="5" fill="#F7FAFC"/><text x="745" y="960" text-anchor="middle" class="edge">Adjuntos</text>
+  </g><g>
+    <path d="M520,950 L1165,1085" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="802.2" y="1024" width="80.60000000000001" height="23" rx="5" fill="#F7FAFC"/><text x="842.5" y="1040" text-anchor="middle" class="edge">Agregados</text>
+  </g><g>
+    <path d="M1380,950 L1600,1085" fill="none" stroke="#6B7C8F" stroke-width="2.3" marker-end="url(#arrow)"/>
+    <rect x="1493.4" y="999" width="73.2" height="23" rx="5" fill="#F7FAFC"/><text x="1530" y="1015" text-anchor="middle" class="edge">Registra</text>
+  </g><g><path d="M1560,495 L1800,495 L1800,1010 L950,1010" fill="none" stroke="#A84242" stroke-width="2.3" stroke-dasharray="8 6" marker-end="url(#arrow)"/>
+    <text x="1350" y="1001" text-anchor="middle" class="edge">Observa todas las capacidades</text></g></svg>
