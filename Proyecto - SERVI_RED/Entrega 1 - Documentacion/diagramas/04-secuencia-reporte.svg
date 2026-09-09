@@ -1,51 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2100" height="1420" viewBox="0 0 2100 1420">
   <defs>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#17365D" flood-opacity="0.14"/></filter>
-    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#6B7C8F"/></marker>
-    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F75B5"/></marker>
     <style>
-      text{font-family:Arial,Helvetica,sans-serif;fill:#1D2733}
-      .title{font-size:34px;font-weight:700;fill:#17365D}
-      .subtitle{font-size:18px;fill:#536273}
-      .boxTitle{font-size:20px;font-weight:700}
-      .body{font-size:16px}
-      .small{font-size:14px;fill:#536273}
-      .edge{font-size:14px;font-weight:600;fill:#536273}
-      .zone{font-size:20px;font-weight:700;fill:#17365D}
+      .title{font:700 36px Arial;fill:#173a64}.sub{font:18px Arial;fill:#52677e}.head{fill:#fff;stroke:#2876c7;stroke-width:2}.core{fill:#dcecf9;stroke:#173a64;stroke-width:2}.ext{fill:#e2f2e9;stroke:#34845d;stroke-width:2}.data{fill:#eee6f5;stroke:#76509a;stroke-width:2}.txt{font:700 18px Arial;fill:#1f2937}.small{font:15px Arial;fill:#334155}.life{stroke:#7890aa;stroke-width:1.5;stroke-dasharray:7 7}.call{stroke:#2876c7;stroke-width:2.5;fill:none;marker-end:url(#arrow)}.ret{stroke:#667f99;stroke-width:2;stroke-dasharray:7 6;fill:none;marker-end:url(#arrow2)}.event{stroke:#34845d;stroke-width:2.5;fill:none;marker-end:url(#green)}
     </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#2876c7"/></marker>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#667f99"/></marker>
+    <marker id="green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#34845d"/></marker>
   </defs>
-  <rect width="2100" height="1420" fill="#F7FAFC"/>
-  <text x="1050" y="52" text-anchor="middle" class="title">SERVI-RED - Secuencia de Reporte de Corte</text>
-  <text x="1050" y="82" text-anchor="middle" class="subtitle">Flujo crítico y efectos desacoplados</text><g>
-    <rect x="10" y="120" width="180" height="75" rx="8" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
-    <text x="100" y="164.5" text-anchor="middle" class="boxTitle" fill="#17365D">Ciudadano</text>
-    
-  </g><line x1="100" y1="195" x2="100" y2="1305" stroke="#6B7C8F" stroke-width="1.5" stroke-dasharray="7 7"/><g>
-    <rect x="240" y="120" width="180" height="75" rx="8" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
-    <text x="330" y="164.5" text-anchor="middle" class="boxTitle" fill="#17365D">Canal móvil</text>
-    
-  </g><line x1="330" y1="195" x2="330" y2="1305" stroke="#6B7C8F" stroke-width="1.5" stroke-dasharray="7 7"/><g>
-    <rect x="480" y="120" width="180" height="75" rx="8" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
-    <text x="570" y="164.5" text-anchor="middle" class="boxTitle" fill="#17365D">Fachada</text>
-    
-  </g><line x1="570" y1="195" x2="570" y2="1305" stroke="#6B7C8F" stroke-width="1.5" stroke-dasharray="7 7"/><g>
-    <rect x="720" y="120" width="180" height="75" rx="8" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
-    <text x="810" y="164.5" text-anchor="middle" class="boxTitle" fill="#17365D">Identidad</text>
-    
-  </g><line x1="810" y1="195" x2="810" y2="1305" stroke="#6B7C8F" stroke-width="1.5" stroke-dasharray="7 7"/><g>
-    <rect x="960" y="120" width="180" height="75" rx="8" fill="#D9EAF7" stroke="#17365D" stroke-width="2"/>
-    <text x="1050" y="164.5" text-anchor="middle" class="boxTitle" fill="#17365D">Reportes</text>
-    
-  </g><line x1="1050" y1="195" x2="1050" y2="1305" stroke="#6B7C8F" stroke-width="1.5" stroke-dasharray="7 7"/><g>
-    <rect x="1200" y="120" width="180" height="75" rx="8" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
-    <text x="1290" y="164.5" text-anchor="middle" class="boxTitle" fill="#17365D">Geografía</text>
-    
-  </g><line x1="1290" y1="195" x2="1290" y2="1305" stroke="#6B7C8F" stroke-width="1.5" stroke-dasharray="7 7"/><g>
-    <rect x="1440" y="120" width="180" height="75" rx="8" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
-    <text x="1530" y="164.5" text-anchor="middle" class="boxTitle" fill="#17365D">Evidencias</text>
-    
-  </g><line x1="1530" y1="195" x2="1530" y2="1305" stroke="#6B7C8F" stroke-width="1.5" stroke-dasharray="7 7"/><g>
-    <rect x="1680" y="120" width="180" height="75" rx="8" fill="#FFFFFF" stroke="#2F75B5" stroke-width="2"/>
-    <text x="1770" y="151" text-anchor="middle" class="boxTitle" fill="#17365D">Atención / efectos</text>
-    <text x="1770" y="180" text-anchor="middle" class="body"><tspan x="1770" dy="0">Avisos y auditoría</tspan></text>
-  </g><line x1="1770" y1="195" x2="1770" y2="1305" stroke="#6B7C8F" stroke-width="1.5" stroke-dasharray="7 7"/><g><line x1="100" y1="255" x2="330" y2="255" stroke="#2F75B5" stroke-width="2.4"  marker-end="url(#arrowBlue)"/><text x="215" y="245" text-anchor="middle" class="edge">1. Completa reporte y evidencia</text></g><g><line x1="330" y1="340" x2="570" y2="340" stroke="#2F75B5" stroke-width="2.4"  marker-end="url(#arrowBlue)"/><text x="450" y="330" text-anchor="middle" class="edge">2. Envía reporte + correlación</text></g><g><line x1="570" y1="425" x2="810" y2="425" stroke="#2F75B5" stroke-width="2.4"  marker-end="url(#arrowBlue)"/><text x="690" y="415" text-anchor="middle" class="edge">3. Autentica y solicita autorización</text></g><g><line x1="810" y1="500" x2="570" y2="500" stroke="#6B7C8F" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#arrow)"/><text x="690" y="490" text-anchor="middle" class="edge">4. Acceso autorizado</text></g><g><line x1="570" y1="585" x2="1050" y2="585" stroke="#2F75B5" stroke-width="2.4"  marker-end="url(#arrowBlue)"/><text x="810" y="575" text-anchor="middle" class="edge">5. Registrar corte</text></g><g><line x1="1050" y1="670" x2="1290" y2="670" stroke="#2F75B5" stroke-width="2.4"  marker-end="url(#arrowBlue)"/><text x="1170" y="660" text-anchor="middle" class="edge">6. Validar ubicación y operador</text></g><g><line x1="1290" y1="745" x2="1050" y2="745" stroke="#6B7C8F" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#arrow)"/><text x="1170" y="735" text-anchor="middle" class="edge">7. Territorio y responsable</text></g><g><line x1="1050" y1="830" x2="1530" y2="830" stroke="#2F75B5" stroke-width="2.4"  marker-end="url(#arrowBlue)"/><text x="1290" y="820" text-anchor="middle" class="edge">8. Guardar evidencia protegida</text></g><g><line x1="1530" y1="905" x2="1050" y2="905" stroke="#6B7C8F" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#arrow)"/><text x="1290" y="895" text-anchor="middle" class="edge">9. Referencia de evidencia</text></g><rect x="960" y="945" width="180" height="70" rx="10" fill="#D9EAF7" stroke="#17365D" stroke-width="2"/><text x="1050" y="974" text-anchor="middle" class="small">10. Validar, crear</text><text x="1050" y="996" text-anchor="middle" class="small">y asignar código</text><g><line x1="1050" y1="1065" x2="1770" y2="1065" stroke="#2F75B5" stroke-width="2.4"  marker-end="url(#arrowBlue)"/><text x="1410" y="1055" text-anchor="middle" class="edge">11. Caso + aviso + auditoría</text></g><g><line x1="1050" y1="1150" x2="570" y2="1150" stroke="#6B7C8F" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#arrow)"/><text x="810" y="1140" text-anchor="middle" class="edge">12. Reporte aceptado</text></g><g><line x1="570" y1="1235" x2="330" y2="1235" stroke="#6B7C8F" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#arrow)"/><text x="450" y="1225" text-anchor="middle" class="edge">13. Código de seguimiento</text></g><g><line x1="330" y1="1320" x2="100" y2="1320" stroke="#6B7C8F" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#arrow)"/><text x="215" y="1310" text-anchor="middle" class="edge">14. Confirmación visible</text></g><rect x="110" y="1360" width="1880" height="40" rx="8" fill="#F7E4E4"/><text x="1050" y="1386" text-anchor="middle" class="body">Observabilidad correlaciona latencia, errores y resultados durante toda la transacción.</text></svg>
+  <rect width="2100" height="1420" fill="#f7fafc"/>
+  <text x="1050" y="55" text-anchor="middle" class="title">SERVI-RED - Secuencia de Reporte de Corte</text>
+  <text x="1050" y="88" text-anchor="middle" class="sub">Persistencia centralizada en Supabase y publicación confiable de efectos posteriores</text>
+  <g>
+    <rect x="25" y="125" width="180" height="75" rx="8" class="head"/><text x="115" y="168" text-anchor="middle" class="txt">Ciudadano</text>
+    <rect x="255" y="125" width="180" height="75" rx="8" class="head"/><text x="345" y="168" text-anchor="middle" class="txt">Canal móvil</text>
+    <rect x="485" y="125" width="180" height="75" rx="8" class="head"/><text x="575" y="168" text-anchor="middle" class="txt">Fachada API</text>
+    <rect x="715" y="125" width="180" height="75" rx="8" class="head"/><text x="805" y="168" text-anchor="middle" class="txt">Identidad</text>
+    <rect x="945" y="125" width="180" height="75" rx="8" class="core"/><text x="1035" y="168" text-anchor="middle" class="txt">Reportes</text>
+    <rect x="1175" y="125" width="205" height="75" rx="8" class="core"/><text x="1277" y="157" text-anchor="middle" class="txt">Persistencia</text><text x="1277" y="182" text-anchor="middle" class="small">Microservicio</text>
+    <rect x="1430" y="125" width="205" height="75" rx="8" class="data"/><text x="1532" y="157" text-anchor="middle" class="txt">Supabase</text><text x="1532" y="182" text-anchor="middle" class="small">PostgreSQL + Storage</text>
+    <rect x="1685" y="125" width="180" height="75" rx="8" class="ext"/><text x="1775" y="157" text-anchor="middle" class="txt">Bus de eventos</text><text x="1775" y="182" text-anchor="middle" class="small">Outbox/publicación</text>
+    <rect x="1915" y="125" width="160" height="75" rx="8" class="ext"/><text x="1995" y="157" text-anchor="middle" class="txt">Efectos</text><text x="1995" y="182" text-anchor="middle" class="small">Avisos y auditoría</text>
+  </g>
+  <g>
+    <line x1="115" y1="200" x2="115" y2="1320" class="life"/><line x1="345" y1="200" x2="345" y2="1320" class="life"/><line x1="575" y1="200" x2="575" y2="1320" class="life"/><line x1="805" y1="200" x2="805" y2="1320" class="life"/><line x1="1035" y1="200" x2="1035" y2="1320" class="life"/><line x1="1277" y1="200" x2="1277" y2="1320" class="life"/><line x1="1532" y1="200" x2="1532" y2="1320" class="life"/><line x1="1775" y1="200" x2="1775" y2="1320" class="life"/><line x1="1995" y1="200" x2="1995" y2="1320" class="life"/>
+  </g>
+  <g class="small">
+    <text x="175" y="248">1. Completa reporte y adjunta evidencia</text><path d="M115 260 H345" class="call"/>
+    <text x="380" y="333">2. Envía solicitud con identificador de correlación</text><path d="M345 345 H575" class="call"/>
+    <text x="620" y="418">3. Autentica y solicita autorización</text><path d="M575 430 H805" class="call"/>
+    <text x="620" y="493">4. Acceso autorizado</text><path d="M805 505 H575" class="ret"/>
+    <text x="700" y="578">5. Solicita registrar el corte</text><path d="M575 590 H1035" class="call"/>
+    <rect x="960" y="625" width="150" height="70" rx="8" class="core"/><text x="1035" y="653" text-anchor="middle">6. Valida reglas,</text><text x="1035" y="678" text-anchor="middle">zona y datos mínimos</text>
+    <text x="1080" y="748">7. Guarda reporte, evidencia y evento (idempotente)</text><path d="M1035 760 H1277" class="call"/>
+    <text x="1320" y="833">8. Transacción y almacenamiento protegido</text><path d="M1277 845 H1532" class="call"/>
+    <text x="1325" y="908">9. Commit confirmado</text><path d="M1532 920 H1277" class="ret"/>
+    <text x="1090" y="983">10. Código y estado persistidos</text><path d="M1277 995 H1035" class="ret"/>
+    <text x="1270" y="1058">11. Publica evento confirmado desde Outbox</text><path d="M1035 1070 H1775" class="event"/>
+    <text x="1810" y="1133">12. Atención, avisos y auditoría</text><path d="M1775 1145 H1995" class="event"/>
+    <text x="720" y="1208">13. Reporte aceptado y código de seguimiento</text><path d="M1035 1220 H575" class="ret"/>
+    <path d="M575 1270 H345" class="ret"/><path d="M345 1305 H115" class="ret"/><text x="210" y="1292">14. Confirmación visible</text>
+  </g>
+  <rect x="75" y="1350" width="1950" height="42" rx="8" fill="#fde7e7" stroke="#c94b4b"/><text x="1050" y="1377" text-anchor="middle" class="small">Observabilidad correlaciona latencia, errores, trazas y resultado de la transacción de extremo a extremo.</text>
+</svg>
