@@ -1,21 +1,23 @@
 # SAD SERVI-RED - Entrega 1
 
-## Arquitectura lógica sin tecnología
+## Arquitectura de microservicios con persistencia centralizada
 
 | Campo | Contenido |
 |---|---|
 | Sistema | SERVI-RED - Plataforma Colaborativa de Reporte y Monitoreo de Servicios Públicos Domiciliarios en Colombia |
 | Documento | Software Architecture Document (SAD) |
-| Entrega | No. 1 - Arquitectura lógica sin tecnología |
+| Entrega | No. 1 - Arquitectura lógica actualizada |
 | Estado | Borrador para revisión del equipo y del profesor |
-| Alcance tecnológico | Agnóstico de lenguajes, frameworks, motores de datos y proveedor de nube |
+| Alcance tecnológico | Lenguajes y frameworks por definir; Supabase seleccionado como plataforma administrada de datos |
 
 ## 1. Propósito del documento
 
 Este SAD define la arquitectura lógica inicial de SERVI-RED. Describe el alcance,
 los actores, las capacidades, los atributos de calidad, las restricciones, las
 decisiones arquitectónicas y las vistas necesarias para razonar sobre el sistema
-antes de seleccionar tecnologías o iniciar su implementación.
+antes de iniciar su implementación. La arquitectura conserva independencia de
+lenguajes y frameworks, pero adopta Supabase como plataforma administrada de
+datos detrás de un microservicio exclusivo de Persistencia.
 
 El documento utiliza el modelo C4 para las vistas de contexto, contenedores y
 componentes, complementado con vistas de procesos, desarrollo y despliegue. La
@@ -85,7 +87,7 @@ Incluido en el alcance lógico:
 
 Fuera del alcance de esta entrega:
 
-- Selección de lenguajes, frameworks o productos concretos.
+- Selección de lenguajes y frameworks concretos para los microservicios.
 - Diseño detallado de interfaz de usuario.
 - Modelos físicos de base de datos.
 - Código ejecutable e infraestructura aprovisionada.
@@ -197,7 +199,7 @@ validados con los interesados y ajustados con datos de carga reales.
 
 | Id | Escenario medible |
 |---|---|
-| RNF-MAN-01 | Las capacidades de identidad, reportes, atención, indicadores, notificación, auditoría y observabilidad deben mantener responsabilidades explícitas. |
+| RNF-MAN-01 | Las capacidades de identidad, reportes, atención, indicadores, notificación, persistencia, auditoría y observabilidad deben mantener responsabilidades explícitas. |
 | RNF-MAN-02 | Los cambios de una capacidad no deben exigir modificar consumidores que respeten el contrato publicado. |
 | RNF-MAN-03 | Las decisiones significativas deben registrarse mediante ADR y revisarse cuando cambien sus supuestos. |
 
@@ -205,7 +207,8 @@ validados con los interesados y ajustados con datos de carga reales.
 
 ### 6.1 Restricciones
 
-- La Entrega 1 debe describir arquitectura lógica sin seleccionar tecnologías.
+- La Entrega 1 describe principalmente arquitectura lógica; por decisión posterior
+  del equipo, Supabase se documenta como excepción tecnológica para la persistencia.
 - La solución debe ofrecer canales móvil y web y operar como plataforma SaaS.
 - El ámbito inicial es Colombia y su división territorial y regulatoria.
 - Deben contemplarse energía, gas, acueducto, alcantarillado, aseo y residuos.
@@ -293,15 +296,24 @@ validados con los interesados y ajustados con datos de carga reales.
 - **Consecuencias:** exige estándares de instrumentación, tableros, alertas y
   responsables de respuesta desde el inicio.
 
-### ADR-007 - Separar datos operacionales, evidencia y datos analíticos
+### ADR-007 - Centralizar la persistencia mediante un microservicio y Supabase
 
 - **Estado:** propuesta aceptada.
-- **Decisión:** distinguir lógicamente el estado transaccional de reportes, los
-  archivos de evidencia y las estructuras optimizadas para indicadores.
-- **Justificación:** tienen patrones de acceso, sensibilidad, volumen y retención
-  diferentes.
-- **Consecuencias:** requiere sincronización controlada, linaje de datos y reglas
-  específicas de respaldo y eliminación.
+- **Decisión:** incorporar un microservicio de Persistencia como único componente
+  autorizado para consultar o modificar Supabase. Los demás microservicios usan
+  contratos internos versionados y nunca acceden directamente a tablas, SDK
+  administrativos ni credenciales de Supabase. PostgreSQL conserva los datos
+  estructurados y Supabase Storage almacena fotografías y evidencias. Dentro de
+  la plataforma se mantienen límites lógicos por dominio para datos operacionales,
+  analíticos y de auditoría.
+- **Justificación:** centraliza transacciones, integridad, migraciones y políticas
+  de acceso; evita duplicar lógica de persistencia y reduce la exposición de
+  credenciales privilegiadas.
+- **Consecuencias:** Persistencia se convierte en una dependencia crítica y debe
+  ser sin estado, replicable y observable. Sus contratos deben expresar
+  operaciones del negocio, no operaciones genéricas sobre tablas. Se requieren
+  timeouts, reintentos controlados, idempotencia, agrupación de conexiones y un
+  mecanismo transaccional de publicación de eventos, como Outbox.
 
 ## 8. Vistas del sistema
 
@@ -322,6 +334,7 @@ C4Context
     System_Ext(regExternos, "Plataformas regulatorias", "Reciben exportaciones e información")
     System_Ext(canales, "Canales externos de notificación", "Entregan avisos al usuario")
     System_Ext(cartografia, "Servicio cartográfico abierto", "Proporciona referencia geográfica")
+    System_Ext(supabase, "Supabase", "Plataforma administrada de PostgreSQL y almacenamiento de evidencias")
 
     Rel(ciudadano, servired, "Reporta, consulta y valida")
     Rel(operador, servired, "Gestiona casos")
@@ -333,6 +346,7 @@ C4Context
     Rel(servired, regExternos, "Publica información regulatoria")
     Rel(servired, canales, "Solicita notificaciones")
     Rel(servired, cartografia, "Consulta referencias geográficas")
+    Rel(servired, supabase, "Persiste y consulta mediante su servicio interno de Persistencia")
 ```
 
 ### 8.2 Vista de contenedores lógicos - C4 Nivel 2
@@ -353,18 +367,17 @@ C4Container
         Container(portalOp, "Portal operacional", "Aplicación web", "Atención, moderación y administración")
         Container(portalPublico, "Portal público", "Aplicación web", "Mapas, indicadores y datos abiertos")
         Container(api, "Fachada de servicios", "Interfaz lógica", "Expone contratos y aplica políticas de entrada")
-        Container(identidad, "Identidad y acceso", "Capacidad lógica", "Autenticación, RBAC y sesiones")
-        Container(reportes, "Gestión de reportes", "Capacidad lógica", "Ciclo de vida, validaciones y evidencias")
-        Container(atencion, "Atención operacional", "Capacidad lógica", "Asignación, prioridad, moderación y cierre")
-        Container(geo, "Información geográfica", "Capacidad lógica", "Búsquedas territoriales y agregación espacial")
-        Container(indicadores, "Indicadores y datos abiertos", "Capacidad lógica", "Estadísticas, exportación y publicación")
-        Container(notificaciones, "Notificaciones", "Capacidad lógica", "Confirmaciones y avisos desacoplados")
-        Container(auditoria, "Auditoría y trazabilidad", "Capacidad transversal", "Registra acciones verificables")
+        Container(identidad, "Identidad y acceso", "Microservicio", "Autenticación, RBAC y sesiones")
+        Container(reportes, "Gestión de reportes", "Microservicio", "Ciclo de vida, validaciones y evidencias")
+        Container(atencion, "Atención operacional", "Microservicio", "Asignación, prioridad, moderación y cierre")
+        Container(geo, "Información geográfica", "Microservicio", "Búsquedas territoriales y agregación espacial")
+        Container(indicadores, "Indicadores y datos abiertos", "Microservicio", "Estadísticas, exportación y publicación")
+        Container(notificaciones, "Notificaciones", "Microservicio", "Confirmaciones y avisos desacoplados")
+        Container(auditoria, "Auditoría y trazabilidad", "Microservicio", "Registra acciones verificables")
+        Container(persistencia, "Persistencia", "Microservicio", "Único acceso autorizado a datos y evidencias")
         Container(observabilidad, "Monitoreo y observabilidad", "Capacidad transversal", "Métricas, logs, trazas y alertas")
-        ContainerDb(datosOp, "Datos operacionales", "Almacén lógico", "Reportes, estados y asignaciones")
-        ContainerDb(evidencias, "Evidencias", "Almacén lógico", "Fotografías y adjuntos protegidos")
-        ContainerDb(datosAnaliticos, "Datos analíticos", "Almacén lógico", "Agregados, indicadores y datos abiertos")
-        ContainerDb(bitacora, "Bitácora de auditoría", "Almacén protegido", "Eventos de negocio y seguridad")
+        ContainerDb(postgres, "Supabase PostgreSQL", "Servicio administrado", "Datos operacionales, analíticos y auditoría")
+        ContainerDb(storage, "Supabase Storage", "Servicio administrado", "Fotografías y adjuntos protegidos")
     }
 
     Rel(ciudadano, appMovil, "Usa")
@@ -378,20 +391,25 @@ C4Container
     Rel(api, atencion, "Gestiona casos")
     Rel(api, geo, "Consulta ubicación")
     Rel(api, indicadores, "Consulta y exporta")
-    Rel(reportes, datosOp, "Lee y escribe")
-    Rel(reportes, evidencias, "Protege adjuntos")
     Rel(reportes, notificaciones, "Publica cambios")
-    Rel(atencion, datosOp, "Actualiza casos")
-    Rel(indicadores, datosAnaliticos, "Calcula y publica")
     Rel(reportes, auditoria, "Registra eventos")
     Rel(atencion, auditoria, "Registra decisiones")
     Rel(identidad, auditoria, "Registra accesos")
-    Rel(auditoria, bitacora, "Almacena")
+    Rel(identidad, persistencia, "Solicita persistencia")
+    Rel(reportes, persistencia, "Guarda y consulta reportes y evidencias")
+    Rel(atencion, persistencia, "Consulta y actualiza casos")
+    Rel(geo, persistencia, "Consulta referencias territoriales")
+    Rel(indicadores, persistencia, "Consulta datos y guarda agregados")
+    Rel(notificaciones, persistencia, "Registra entregas y reintentos")
+    Rel(auditoria, persistencia, "Registra bitácora protegida")
+    Rel(persistencia, postgres, "Transacciones y consultas")
+    Rel(persistencia, storage, "Gestiona evidencias")
     Rel(ops, observabilidad, "Consulta y responde alertas")
     Rel(observabilidad, api, "Observa")
     Rel(observabilidad, reportes, "Observa")
     Rel(observabilidad, atencion, "Observa")
     Rel(observabilidad, indicadores, "Observa")
+    Rel(observabilidad, persistencia, "Observa latencia, errores y conexiones")
 ```
 
 ### 8.3 Vista de componentes de Gestión de Reportes - C4 Nivel 3
@@ -409,12 +427,12 @@ C4Component
         Component(enrutamiento, "Enrutador territorial", "Dominio", "Determina operador y zona responsable")
         Component(adjuntos, "Gestor de evidencia", "Aplicación", "Valida y protege archivos")
         Component(eventos, "Publicador de eventos", "Aplicación", "Desacopla avisos, auditoría y analítica")
-        Component(repo, "Repositorio de reportes", "Puerto de datos", "Persiste y consulta estado")
+        Component(clientePersistencia, "Cliente de Persistencia", "Adaptador de salida", "Invoca operaciones de datos sin conocer Supabase")
     }
 
     Container_Ext(api, "Fachada de servicios", "Interfaz lógica", "Canales de entrada")
-    Container_Ext(datos, "Datos operacionales", "Almacén lógico", "Estado de reportes")
-    Container_Ext(evidencia, "Evidencias", "Almacén lógico", "Adjuntos")
+    Container_Ext(persistencia, "Persistencia", "Microservicio", "Administra PostgreSQL y Storage en Supabase")
+    System_Ext(supabase, "Supabase", "PostgreSQL + Storage", "Plataforma administrada de datos")
     Container_Ext(atencion, "Atención operacional", "Capacidad lógica", "Gestiona casos")
     Container_Ext(notif, "Notificaciones", "Capacidad lógica", "Envía avisos")
     Container_Ext(audit, "Auditoría", "Capacidad transversal", "Conserva trazabilidad")
@@ -428,9 +446,10 @@ C4Component
     Rel(ciclo, comunidad, "Solicita validaciones")
     Rel(ciclo, enrutamiento, "Obtiene responsable")
     Rel(ciclo, adjuntos, "Asocia evidencia")
-    Rel(ciclo, repo, "Persiste")
-    Rel(repo, datos, "Lee y escribe")
-    Rel(adjuntos, evidencia, "Almacena")
+    Rel(ciclo, clientePersistencia, "Solicita guardar o consultar")
+    Rel(adjuntos, clientePersistencia, "Solicita guardar evidencia")
+    Rel(clientePersistencia, persistencia, "Invoca contrato interno")
+    Rel(persistencia, supabase, "Ejecuta transacciones y gestiona archivos")
     Rel(eventos, atencion, "Notifica nuevo caso")
     Rel(eventos, notif, "Solicita aviso")
     Rel(eventos, audit, "Registra evento")
@@ -448,7 +467,8 @@ sequenceDiagram
     participant I as Identidad y acceso
     participant R as Gestión de reportes
     participant G as Información geográfica
-    participant E as Almacén de evidencia
+    participant P as Microservicio de Persistencia
+    participant S as Supabase PostgreSQL / Storage
     participant O as Atención operacional
     participant N as Notificaciones
     participant U as Auditoría
@@ -462,10 +482,14 @@ sequenceDiagram
     R->>G: Validar ubicación y responsable
     G-->>R: Territorio y operador
     opt Existe adjunto
-        R->>E: Validar y guardar evidencia protegida
-        E-->>R: Referencia de evidencia
+        R->>P: Solicitar almacenamiento de evidencia
+        P->>S: Guardar archivo en Storage
+        S-->>P: Referencia protegida
     end
-    R->>R: Validar, crear y asignar identificador
+    R->>P: Crear reporte con idempotencia
+    P->>S: Ejecutar transacción en PostgreSQL
+    S-->>P: Reporte persistido
+    P-->>R: Identificador y estado inicial
     par Efectos desacoplados
         R-->>O: Nuevo caso para atención
         R-->>N: Solicitud de confirmación
@@ -491,9 +515,12 @@ Flujos alternos relevantes:
 
 ```mermaid
 flowchart LR
-    entrada[Recepción y validación] --> registro[Registro transaccional]
-    registro --> confirmacion[Confirmación al ciudadano]
-    registro --> eventos[Eventos de cambio]
+    entrada[Recepción y autenticación] --> validacion[Validación de negocio]
+    validacion --> persistencia[Microservicio de Persistencia]
+    persistencia --> supabase[(Supabase PostgreSQL / Storage)]
+    supabase --> confirmacion[Confirmación al ciudadano]
+    persistencia --> outbox[Evento persistido / Outbox]
+    outbox --> eventos[Bus de eventos]
     eventos --> atencion[Atención operacional]
     eventos --> avisos[Notificaciones]
     eventos --> analitica[Actualización analítica]
@@ -503,13 +530,14 @@ flowchart LR
     monitoreo --> alertas[Alertas operativas y de seguridad]
 
     seguridad[Autenticación + RBAC + cifrado + políticas] -. controla .-> entrada
-    seguridad -. controla .-> registro
+    seguridad -. controla .-> persistencia
     seguridad -. controla .-> atencion
     seguridad -. controla .-> analitica
 ```
 
 - **Procesamiento síncrono:** autenticación, autorización, validación mínima,
-  persistencia y confirmación del reporte.
+  llamada al microservicio de Persistencia, transacción en Supabase y confirmación
+  del reporte.
 - **Procesamiento asíncrono:** notificaciones, indicadores, exportaciones,
   integración externa y tareas de enriquecimiento.
 - **Supervisión:** cada proceso emite señales correlacionadas y estados de salud.
@@ -518,8 +546,8 @@ flowchart LR
 
 ### 8.6 Vista de desarrollo
 
-La organización propuesta expresa dependencias lógicas, no repositorios ni
-tecnologías definitivas.
+La organización propuesta mantiene independientes los lenguajes y frameworks,
+pero incorpora el microservicio de Persistencia y sus adaptadores para Supabase.
 
 ```text
 servired/
@@ -533,13 +561,20 @@ servired/
 │   ├── atencion-operacional/
 │   ├── informacion-geografica/
 │   ├── indicadores-datos-abiertos/
-│   └── notificaciones/
+│   ├── notificaciones/
+│   └── persistencia/
+│       ├── api-interna/
+│       ├── repositorios/
+│       ├── adaptador-postgresql/
+│       ├── adaptador-storage/
+│       └── migraciones/
 ├── transversal/
 │   ├── seguridad-privacidad/
 │   ├── auditoria-trazabilidad/
 │   └── observabilidad-operacion/
 ├── contratos/
 │   ├── interfaces-publicas/
+│   ├── persistencia-interna/
 │   ├── eventos/
 │   └── integraciones-externas/
 └── documentacion/
@@ -555,12 +590,14 @@ Reglas de dependencia:
 - El dominio de una capacidad no depende de interfaces de usuario.
 - Las integraciones externas se aíslan mediante adaptadores.
 - Seguridad, auditoría y observabilidad ofrecen contratos transversales comunes.
-- Ningún módulo puede consultar directamente el almacén privado de otro módulo.
+- Todos los microservicios de negocio usan el contrato interno de Persistencia.
+- Solo Persistencia contiene credenciales y adaptadores de Supabase; ningún otro
+  servicio consulta directamente tablas, buckets o API administrativas.
 
 ### 8.7 Vista física / despliegue lógico
 
-La vista muestra zonas de ejecución sin seleccionar nube, sistema operativo,
-orquestador ni producto concreto.
+La vista muestra zonas de ejecución sin seleccionar sistema operativo ni
+orquestador. Supabase aparece como plataforma administrada de persistencia.
 
 ```mermaid
 flowchart TB
@@ -577,15 +614,14 @@ flowchart TB
 
     subgraph aplicacion[Zona de aplicaciones escalable]
         fachada[Fachada de servicios]
-        capacidades[Capacidades de negocio]
+        capacidades[Microservicios de negocio]
+        persistencia[Microservicio de Persistencia replicado]
         trabajo[Procesamiento desacoplado]
     end
 
-    subgraph datos[Zona de datos protegida]
-        op[(Datos operacionales)]
-        ev[(Evidencias)]
-        an[(Datos analíticos)]
-        au[(Auditoría)]
+    subgraph datos[Supabase - Zona de datos administrada]
+        postgres[(PostgreSQL: esquemas operacionales, analíticos y auditoría)]
+        storage[(Storage: evidencias protegidas)]
     end
 
     subgraph gestion[Zona de gestión]
@@ -608,26 +644,30 @@ flowchart TB
     entrada --> fachada
     fachada --> capacidades
     capacidades --> trabajo
-    capacidades --> op
-    capacidades --> ev
-    trabajo --> an
-    capacidades --> au
+    capacidades --> persistencia
+    trabajo --> persistencia
+    persistencia --> postgres
+    persistencia --> storage
     capacidades --> externos
     fachada -. señales .-> monitor
     capacidades -. señales .-> monitor
+    persistencia -. señales .-> monitor
     trabajo -. señales .-> monitor
     monitor --> alerta
     secretos -. políticas .-> entrada
     secretos -. políticas .-> capacidades
-    secretos -. políticas .-> datos
+    secretos -. credenciales .-> persistencia
 ```
 
 Principios físicos:
 
 - Separar acceso público, aplicación, datos y gestión.
 - Escalar de manera independiente acceso, capacidades y trabajo asíncrono.
-- No exponer directamente almacenes de datos a usuarios o sistemas externos.
-- Aislar evidencias y auditoría por su mayor sensibilidad.
+- Replicar el microservicio de Persistencia y mantenerlo sin estado.
+- No exponer Supabase directamente a canales, microservicios de negocio o
+  sistemas externos.
+- Mantener separación lógica de datos operacionales, analíticos, auditoría y
+  evidencias dentro de Supabase.
 - Mantener observabilidad disponible aun cuando una capacidad de negocio falle.
 - Aplicar cifrado, identidad de cargas y mínimo privilegio entre zonas.
 
@@ -715,6 +755,10 @@ servicio, sensibilidad del dato y relación con el caso.
 
 - Cifrado de comunicaciones y de datos sensibles almacenados.
 - Gestión separada y rotación de claves y secretos.
+- La credencial privilegiada de Supabase solo puede estar disponible para el
+  microservicio de Persistencia y debe almacenarse en un gestor de secretos.
+- Los canales y microservicios de negocio no pueden consumir directamente las
+  tablas, buckets ni API administrativas de Supabase.
 - Clasificación de datos: público, interno, confidencial y altamente sensible.
 - Acceso temporal y justificado a fotografías, ubicación precisa y denuncias.
 - Anonimización o agregación antes de publicar datos abiertos.
@@ -746,6 +790,10 @@ retención definida y capacidad de búsqueda para investigaciones.
 | Dependencia de datos externos | Flujos incompletos o incorrectos | Adaptadores, timeouts, reintentos y operación degradada |
 | Indicadores sesgados | Decisiones públicas incorrectas | Metadatos de cobertura, calidad y metodología visible |
 | Acumulación de evidencia | Costos y superficie de exposición | Retención, clasificación y almacenamiento separado |
+| Indisponibilidad del microservicio de Persistencia | Bloqueo de registros y actualizaciones | Réplicas sin estado, balanceo, health checks, timeouts y reintentos idempotentes |
+| Saturación de conexiones a Supabase | Aumento de latencia o rechazo de operaciones | Agrupación y límites de conexiones, métricas de saturación y control de carga |
+| Acoplamiento al esquema físico | Cambios de datos afectan a todos los servicios | Contratos de negocio versionados y acceso exclusivo mediante Persistencia |
+| Exposición de credenciales de Supabase | Acceso no autorizado a datos o evidencias | Gestor de secretos, mínimo privilegio, rotación y prohibición de acceso directo |
 | Falta de operación efectiva | Incidentes prolongados | Observabilidad, alertas accionables y procedimientos de respuesta |
 
 ## 12. Trazabilidad de objetivos y arquitectura
@@ -754,10 +802,10 @@ retención definida y capacidad de búsqueda para investigaciones.
 |---|---|---|
 | Reporte ciudadano accesible | Canal móvil, Reportes, Georreferenciación | RNF-ACC, RNF-REN, ADR-001 |
 | Atención en tiempo real | Atención, Notificaciones, Integraciones | RNF-DIS, RNF-OBS, ADR-003 |
-| Indicadores y datos abiertos | Indicadores, Datos analíticos | RNF-DAT, ADR-007 |
+| Indicadores y datos abiertos | Indicadores, Persistencia, Supabase PostgreSQL | RNF-DAT, ADR-007 |
 | Reporte anónimo de fraude | Reportes, Moderación, Seguridad | RNF-SEG, ADR-004 |
 | Rendición de cuentas | Auditoría, Exportaciones | RNF-SEG-05, ADR-005 |
-| Operación confiable | Observabilidad, Alertas | RNF-OBS, ADR-006 |
+| Operación confiable | Observabilidad, Persistencia, Alertas | RNF-OBS, ADR-006, ADR-007 |
 
 ## 13. Glosario
 
@@ -773,6 +821,9 @@ retención definida y capacidad de búsqueda para investigaciones.
 | RBAC | Control de acceso basado en roles. |
 | Auditoría | Registro protegido de acciones relevantes de negocio y seguridad. |
 | Observabilidad | Capacidad de entender el estado interno mediante logs, métricas y trazas. |
+| Microservicio de Persistencia | Único servicio autorizado para administrar datos y evidencias en Supabase. |
+| Supabase | Plataforma administrada utilizada para PostgreSQL y almacenamiento de evidencias. |
+| Outbox transaccional | Patrón que registra el cambio y el evento pendiente en una misma transacción para publicarlo de forma confiable. |
 | RTO | Tiempo objetivo máximo para recuperar el servicio. |
 | RPO | Pérdida máxima de información admisible medida en tiempo. |
 
@@ -788,6 +839,10 @@ retención definida y capacidad de búsqueda para investigaciones.
 - [ ] Confirmar sistemas externos y contratos disponibles de operadores, SSPD y CRA.
 - [ ] Elaborar catálogo de amenazas y casos de abuso antes de seleccionar tecnología.
 - [ ] Acordar quién recibe cada alerta y los tiempos de atención.
+- [ ] Diseñar los contratos de negocio expuestos por el microservicio de Persistencia.
+- [ ] Definir esquemas, tablas, políticas, buckets y migraciones iniciales en Supabase.
+- [ ] Validar límites de conexiones, respaldo, RTO, RPO y estrategia de recuperación de Supabase.
+- [ ] Definir idempotencia, reintentos y publicación confiable mediante Outbox.
 
 ## 15. Criterio de cierre de la Entrega 1
 
@@ -801,5 +856,6 @@ La primera entrega puede considerarse completa cuando:
 - Seguridad y observabilidad aparecen en requisitos, decisiones, vistas y flujos.
 - Existe trazabilidad entre objetivos, capacidades y atributos de calidad.
 - Los asuntos abiertos tienen responsable y fecha de decisión.
-- El documento fue revisado por el equipo y no fija tecnologías antes de la
-  siguiente entrega.
+- El documento fue revisado por el equipo y deja explícita a Supabase como única
+  decisión tecnológica anticipada; lenguajes, frameworks y orquestación continúan
+  pendientes para la siguiente entrega.
