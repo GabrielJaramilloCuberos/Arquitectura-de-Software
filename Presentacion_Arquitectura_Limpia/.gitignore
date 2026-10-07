@@ -1,0 +1,9 @@
+target/
+.m2/
+pedidos.db
+pedidos.db-shm
+pedidos.db-wal
+*.log
+.idea/
+.vscode/
+*.iml

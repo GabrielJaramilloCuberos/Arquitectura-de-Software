@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pedidos - Arquitectura Limpia</title>
+    <style>
+        :root { font-family: system-ui, sans-serif; color: #183153; background: #f4f7fb; }
+        body { max-width: 920px; margin: 0 auto; padding: 32px 18px; }
+        h1 { margin-bottom: 4px; }
+        .subtitulo { color: #53657d; margin-top: 0; }
+        .panel { background: white; border-radius: 14px; padding: 22px; margin: 22px 0; box-shadow: 0 8px 24px #18315316; }
+        form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+        label { display: grid; gap: 6px; font-weight: 650; }
+        input { padding: 10px; border: 1px solid #b8c5d6; border-radius: 8px; font: inherit; }
+        button { grid-column: 1 / -1; padding: 11px; border: 0; border-radius: 8px; background: #1769e0; color: white; font-weight: 700; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #e1e7ef; }
+        th { color: #53657d; }
+        #mensaje { min-height: 24px; font-weight: 650; }
+        .ok { color: #147a42; }
+        .error { color: #b42318; }
+        @media (max-width: 620px) { form { grid-template-columns: 1fr; } .tabla { overflow-x: auto; } }
+    </style>
+</head>
+<body>
+<h1>Registro de pedidos</h1>
+<p class="subtitulo">Ejemplo funcional de Arquitectura Limpia con Spring Boot y SQLite.</p>
+
+<section class="panel">
+    <h2>Nuevo pedido</h2>
+    <form id="formulario">
+        <label>Cliente
+            <input id="cliente" required placeholder="Ana">
+        </label>
+        <label>Producto
+            <input id="producto" required placeholder="Café">
+        </label>
+        <label>Cantidad
+            <input id="cantidad" type="number" min="1" value="1" required>
+        </label>
+        <label>Precio unitario
+            <input id="precio" type="number" min="0" step="0.01" value="10000" required>
+        </label>
+        <button type="submit">Registrar pedido</button>
+    </form>
+    <p id="mensaje"></p>
+</section>
+
+<section class="panel">
+    <h2>Pedidos guardados</h2>
+    <div class="tabla">
+        <table>
+            <thead><tr><th>Cliente</th><th>Producto</th><th>Cantidad</th><th>Total</th></tr></thead>
+            <tbody id="pedidos"></tbody>
+        </table>
+    </div>
+</section>
+
+<script>
+    const formulario = document.querySelector('#formulario');
+    const mensaje = document.querySelector('#mensaje');
+    const cuerpoTabla = document.querySelector('#pedidos');
+    const moneda = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' });
+
+    async function cargarPedidos() {
+        const respuesta = await fetch('/api/pedidos');
+        const pedidos = await respuesta.json();
+        cuerpoTabla.replaceChildren(...pedidos.map(pedido => {
+            const fila = document.createElement('tr');
+            [pedido.cliente, pedido.producto, pedido.cantidad, moneda.format(pedido.total)]
+                .forEach(valor => {
+                    const celda = document.createElement('td');
+                    celda.textContent = valor;
+                    fila.appendChild(celda);
+                });
+            return fila;
+        }));
+    }
+
+    formulario.addEventListener('submit', async evento => {
+        evento.preventDefault();
+        mensaje.textContent = '';
+
+        const respuesta = await fetch('/api/pedidos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                cliente: document.querySelector('#cliente').value,
+                producto: document.querySelector('#producto').value,
+                cantidad: Number(document.querySelector('#cantidad').value),
+                precioUnitario: Number(document.querySelector('#precio').value)
+            })
+        });
+        const contenido = await respuesta.json();
+
+        if (!respuesta.ok) {
+            mensaje.className = 'error';
+            mensaje.textContent = contenido.error ?? 'No fue posible registrar el pedido.';
+            return;
+        }
+
+        mensaje.className = 'ok';
+        mensaje.textContent = `Pedido registrado. Total: ${moneda.format(contenido.total)}`;
+        formulario.reset();
+        document.querySelector('#cantidad').value = 1;
+        document.querySelector('#precio').value = 10000;
+        await cargarPedidos();
+    });
+
+    cargarPedidos().catch(() => {
+        mensaje.className = 'error';
+        mensaje.textContent = 'No fue posible cargar los pedidos.';
+    });
+</script>
+</body>
+</html>
