@@ -2,3 +2,4 @@ paho-mqtt
 opencv-python
 pyzbar
 python-dotenv
+python-barcode[images]

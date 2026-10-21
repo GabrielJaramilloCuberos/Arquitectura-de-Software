@@ -1,8 +1,11 @@
 from pathlib import Path
+from io import BytesIO
 
+import barcode
 import cv2
 import numpy as np
 from pyzbar.pyzbar import decode, ZBarSymbol
+from barcode.writer import ImageWriter
 
 # ================ FUNCIONES DE IMAGEN ================
 
@@ -25,3 +28,10 @@ def decodificar_imagen(imagen) -> str:
 
   codigo = codigos[0].data.decode("utf-8")
   return codigo
+
+# Se genera un código Code 128 para conservar exactamente todos los dígitos recibidos
+def generar_codigo_barras(codigo: str) -> bytes:
+  imagen = BytesIO()
+  codigo_barras = barcode.get_barcode_class("code128")(codigo, writer=ImageWriter())
+  codigo_barras.write(imagen, options={"write_text": True})
+  return imagen.getvalue()

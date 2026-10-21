@@ -4,6 +4,7 @@ from email.message import EmailMessage
 from pathlib import Path
 
 from dotenv import load_dotenv
+from imagen import generar_codigo_barras
 
 # ================ FUNCIONES DE CORREO ================
 
@@ -24,6 +25,15 @@ def enviar_correo(codigo: str, grupo: int) -> None:
   mensaje["From"] = remitente
   mensaje["To"] = destinatario
   mensaje.set_content(f"El código final es: {codigo}\nEnviado desde el grupo {grupo}")
+
+  # Se adjunta una imagen con el código de barras correspondiente al código final
+  imagen_codigo = generar_codigo_barras(codigo)
+  mensaje.add_attachment(
+    imagen_codigo,
+    maintype="image",
+    subtype="png",
+    filename=f"codigo-barras-{codigo}.png",
+  )
 
   # Se envía el mensaje a través del servidor SMTP
   with smtplib.SMTP_SSL("smtp.gmail.com", 465) as servidor:

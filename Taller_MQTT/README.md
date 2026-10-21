@@ -176,7 +176,7 @@ broker para poder verse.
 - `main.py`: inicia un grupo, recibe mensajes y envía el siguiente.
 - `mqtt_cliente.py`: realiza la conexión y publica o recibe mensajes.
 - `imagen.py`: lee la imagen y obtiene el código de barras.
-- `correo.py`: envía por correo el código final.
+- `correo.py`: envía por correo el código final y adjunta una imagen Code 128 con sus dígitos exactos.
 - `eliminar_retenidos.py`: limpia los mensajes guardados para repetir una prueba.
 - `codigo-barras-1.png`, `codigo-barras-2.png` y `codigo-barras-3.png`: casos de prueba con códigos de barras.
 
